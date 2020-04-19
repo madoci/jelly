@@ -1,0 +1,10 @@
+language: java
+jdk: 
+  - openjdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+after-success:
+  - bash <(curl -s https://codecov.io/bash)

@@ -27,3 +27,6 @@ target
 
 # Bin folder
 bin
+
+# POM versions backup
+pom.xml.versionsBackup

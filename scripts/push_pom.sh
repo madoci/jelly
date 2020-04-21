@@ -9,8 +9,8 @@ git checkout -b master
 
 # Commit pom.xml
 git add pom.xml
-git commit -m "Prepare next release"
+git commit -m "Prepare la prochaine release (version SNAPSHOT)"
 
 # Push pom.xml
-git remote add origin https://${GITHUB_TOKEN}@github.com/madoci/jelly.git
-git push --quiet --set-upstream origin master
+git remote add origin-travis https://${GITHUB_TOKEN}@github.com/madoci/jelly.git
+git push --quiet --set-upstream origin-travis master

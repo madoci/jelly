@@ -112,7 +112,7 @@ Pour permettre à Maven d'utiliser les tests créés avec JUnit et de générer 
 Afin d'éviter les commit direct sur master, Github peut être configuré pour forcer l'utilisation de pull request :
 
 1. Ajouter une règle en allant sur son dépôt Github dans Settings > Branches et en cliquant sur "Add rule"
-2. Mettre la branche *master* comme cible de la règle et sélectionner :
+2. Mettre la branche *master* comme cible de la règle et sélectionner :  
 `- Require status checks to pass before merging`  
 `--- Require branches to be up to date before merging`  
 `--- Travis CI - Pull Request`

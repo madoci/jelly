@@ -1,5 +1,6 @@
 package fr.uga.fran;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,6 @@ public class Dataframe {
 		
 		public void add(Object element) {
 			list.add(element);
-			
-			if (element != null) {
-				String s = type.cast(element).toString();
-			}
 		}
 		
 		public Object get(int index) { return list.get(index); }
@@ -29,13 +26,11 @@ public class Dataframe {
 	}
 	
 	private List<Column> columns;
-	private int size;
 	
 	/** Public methods **/
 	
 	public Dataframe(String labels[], Object[] ...data) {
 		columns = new ArrayList<>();
-		size = 0;
 		int numLines = 0;
 		
 		// Ajout des colonnes
@@ -65,8 +60,41 @@ public class Dataframe {
 		}
 	}
 	
-	public Dataframe(String CSVFileName) {
+	public Dataframe(String CSVFileName) throws FileNotFoundException, InvalidCSVFormatException {
+		columns = new ArrayList<>();
 		
+		CSVParser parser = new CSVParser(CSVFileName);
+		
+		Object[] labels = parser.readLine();
+		if (labels == null) {
+			throw new InvalidCSVFormatException("file is empty");
+		}
+		
+		List<Object[]> lines = new ArrayList<>();
+		Object[] data;
+		while ((data = parser.readLine()) != null) {
+			lines.add(data);
+			if (data.length != labels.length) {
+				throw new InvalidCSVFormatException("invalid number of fields at line " + lines.size());
+			}
+		}
+		
+		for (int i=0; i<labels.length; i++) {
+			// Cherche le type de la colonne
+			int j = 0;
+			while (j < lines.size() && lines.get(j)[i] == null) {
+				j++;
+			}
+			if (j >= lines.size()) {
+				throw new InvalidCSVFormatException("no data found in column " + i);
+			}
+			
+			addColumn(lines.get(j)[i].getClass(), (String) labels[i]);
+		}
+		
+		for (Object[] line : lines) {
+			addLine(line);
+		}
 	}
 	
 	public Object get(int line, int column) {
@@ -77,6 +105,10 @@ public class Dataframe {
 		return columns.get(column).getLabel();
 	}
 	
+	public Class<?> getType(int column) {
+		return columns.get(column).getType();
+	}
+	
 	public void addLine(Object line[]) {
 		for (int i=0; i<columns.size(); i++) {
 			if (i < line.length) {
@@ -85,7 +117,6 @@ public class Dataframe {
 				columns.get(i).add(null);
 			}
 		}
-		size++;
 	}
 	
 	/** Private methods **/

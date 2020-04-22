@@ -109,4 +109,38 @@ public class DataframeTest {
 		assertEquals(4799., (double) data.get(3, 4), 0.005);
 	}
 	
+	@Test
+	public void testAddLine() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		int year = 2020;
+		String make = "Peugeot";
+		String model = "205";
+		
+		Object[] line = { year, make, model };
+		
+		data.addLine(line);
+		
+		assertEquals(year, (int) data.get(4, 0));
+		assertEquals(make, (String) data.get(4, 1));
+		assertEquals(model, (String) data.get(4, 2));
+		assertNull(data.get(4, 3));
+		assertNull(data.get(4, 4));
+	}
+	
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testEmptyFile() throws Exception {
+		new Dataframe("src/test/resources/empty.csv");
+	}
+	
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testInvalidNumFields() throws Exception {
+		new Dataframe("src/test/resources/missingfields.csv");
+	}
+	
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testEmptyColumn() throws Exception {
+		new Dataframe("src/test/resources/emptycolumn.csv");
+	}
+	
 }

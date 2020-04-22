@@ -23,9 +23,6 @@ jobs:
         skip_cleanup: true
         on:
           tags: true
-      after_deploy:
-        - bash scripts/increase_minor.sh
-        - bash scripts/push_pom.sh
 
 cache:
   directories:

@@ -82,7 +82,7 @@ public class Dataframe {
 		for (int i=0; i<labels.length; i++) {
 			// Cherche le type de la colonne
 			int j = 0;
-			while (j < lines.size() && lines.get(j)[i] == "") {
+			while (j < lines.size() && lines.get(j)[i] == null) {
 				j++;
 			}
 			if (j >= lines.size()) {

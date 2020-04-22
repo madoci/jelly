@@ -17,10 +17,6 @@ public class Dataframe {
 		
 		public void add(Object element) {
 			list.add(element);
-			
-			if (element != null) {
-				String s = type.cast(element).toString();
-			}
 		}
 		
 		public Object get(int index) { return list.get(index); }
@@ -29,13 +25,11 @@ public class Dataframe {
 	}
 	
 	private List<Column> columns;
-	private int size;
 	
 	/** Public methods **/
 	
 	public Dataframe(String labels[], Object[] ...data) {
 		columns = new ArrayList<>();
-		size = 0;
 		int numLines = 0;
 		
 		// Ajout des colonnes
@@ -85,7 +79,6 @@ public class Dataframe {
 				columns.get(i).add(null);
 			}
 		}
-		size++;
 	}
 	
 	/** Private methods **/

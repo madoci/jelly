@@ -4,13 +4,21 @@
   <groupId>fr.uga.fran</groupId>
   <artifactId>jelly</artifactId>
   <packaging>jar</packaging>
-  <version>0.2-SNAPSHOT</version>
-  <name>jelly</name>
+  <version>0.3-SNAPSHOT</version>
+  <name>Jelly</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>github-jelly</id>
+      <name>GitHub Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/madoci/jelly</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>

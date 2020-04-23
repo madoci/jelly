@@ -28,7 +28,7 @@
 
 ![GitHub workflow chart](./images/github-workflow-chart.png)
 
-Chaque nouvelle fonctionnalité ou correction est développé sur une nouvelle branche basée sur *master*. Lorsque la fonctionnalité/correction est terminée, une pull request est ouverte pour pouvoir en discuter avec les collaborateurs. La branche n'est fusionnée avec *master* qu'une fois vérifiée et acceptée.
+Chaque nouvelle fonctionnalité ou correction est développée sur une nouvelle branche basée sur *master*. Lorsque la fonctionnalité/correction est terminée, une pull request est ouverte pour pouvoir en discuter avec les collaborateurs. La branche n'est fusionnée avec *master* qu'une fois vérifiée et acceptée.
 
 ##### Création d'une branche <a name="creation-d-une-branche"></a>
 Lorsqu'un ou plusieurs développeurs commencent à travailler sur une nouvelle fonctionnalité ou sur une correction de bug, une nouvelle branche basée sur master est créée.  

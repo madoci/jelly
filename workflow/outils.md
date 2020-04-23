@@ -1,5 +1,5 @@
 # Table des matières
-- [Github workflow](#github-workflow)  
+- [GitHub workflow](#github-workflow)  
 - [Semantic Versioning](#semantic-versioning)
 - [Maven](#maven)  
 - [Travis CI](#travis-ci)
@@ -12,7 +12,7 @@
   - [Code Climate](#code-climate)
 
 
-# Github workflow
+# GitHub workflow
 - [Branches](#branches)
 - [Utilisation](#utilisation)
   - [Création d'une branche](#creation-d-une-branche)
@@ -26,7 +26,7 @@
 
 ### Utilisation
 
-![Github workflow chart](./images/github-workflow-chart.png)
+![GitHub workflow chart](./images/github-workflow-chart.png)
 
 Chaque nouvelle fonctionnalité ou correction est développé sur une nouvelle branche basée sur *master*. Lorsque la fonctionnalité/correction est terminée, une pull request est ouverte pour pouvoir en discuter avec les collaborateurs. La branche n'est fusionnée avec *master* qu'une fois vérifiée et acceptée.
 
@@ -45,7 +45,7 @@ git push -u origin <feature-name>
 > Publier la branche peut se faire à n'importe quel moment avant la pull request
 
 ##### Ouverture d'une pull-request <a name="creation-d-une-pull-request"></a>
-Lorsqu'une fonctionnalité ou correction est terminée, il faut ouvrir une pull request afin de pouvoir la fusionner sur *master*. Pour cela, il suffit d'aller sur son dépôt [Github](github.com), de se mettre sur la branche de la feature et de cliquer sur **New pull request**.  
+Lorsqu'une fonctionnalité ou correction est terminée, il faut ouvrir une pull request afin de pouvoir la fusionner sur *master*. Pour cela, il suffit d'aller sur son dépôt [GitHub](github.com), de se mettre sur la branche de la feature et de cliquer sur **New pull request**.  
 
 ![Pull request](./images/new-pull-request.png)
 
@@ -65,7 +65,7 @@ puis refusionner *master* sur la branche *\<feature-name>* :
 git checkout <feature-name>
 git merge master
 ```
-> Il est possible de mettre à jour la branche directement depuis la pull request de Github puis de faire un simple `git pull` sur la branche locale
+> Il est possible de mettre à jour la branche directement depuis la pull request de GitHub puis de faire un simple `git pull` sur la branche locale
 
 Lorsque la branche est prête à être mise en production, la pull request est fermée et la branche *\<feature-name>* est fusionnée sur *master*.
 
@@ -78,7 +78,7 @@ git push origin --delete <branch-name>
 
 ### Imposer des restrictions de merge
 Il est possible d'imposer des restrictions de merge sur *master*, notamment obliger l'ouverture de pull request depuis une branche non protégée pour pouvoir commit sur *master*, et demander à ce que la branche de la pull request soit à jour sur *master* et qu'elle passe le build de Travis CI.
-Pour cela, il faut ajouter une règle sur *master* dans **Settings/Branches** du dépôt Github avec les options suivantes :
+Pour cela, il faut ajouter une règle sur *master* dans **Settings/Branches** du dépôt GitHub avec les options suivantes :
 ```
 - Require pull request reviews before merging (OPTIONNEL)
 - Require status checks to pass before merging
@@ -156,7 +156,7 @@ Ces phases sont exécutées séquentiellement. Lancer la commande `mvn package` 
 - [Cycle de vie](#cycle-de-vie)
 - [Travis CI et Maven](#travis-ci-et-maven)
 
-Travis CI est un service en ligne d'intégration continue pour les projets hébergés sur Github. Il permet de définir des tâches à effectuer lorsqu'un commit est envoyé sur le dépôt github.  
+Travis CI est un service en ligne d'intégration continue pour les projets hébergés sur GitHub. Il permet de définir des tâches à effectuer lorsqu'un commit est envoyé sur le dépôt github.  
 
 ### Mise en place
 Pour mettre en place Travis CI sur un projet existant, il faut d'abord s'identifier sur [travis-ci.com](https://travis-ci.com) avec son compte github et ajouter le dépôt du projet aux autorisations de Travis CI.  
@@ -208,6 +208,10 @@ cache:
 # Javadoc
 
 
+# GitHub Packages
+GitHub Packages fait office de dépôt Maven. 
+
+
 # Docker & Docker Hub <a name="docker-et-docker-hub"></a>
 
 
@@ -227,4 +231,4 @@ La commande bash permet d'envoyer le rapport de couverture à CodeCov. *after_su
 
 ### Code Climate
 Code Climate est un service en ligne permettant entre autres d'analyser la qualité du code d'un projet.  
-Pour l'utiliser, il faut se rendre sur [codeclimate.com](#https://codeclimate.com) et se connecter avec son compte Github (dans login/Quality). On peut alors ajouter des dépôts publiques sur Code Climate.
+Pour l'utiliser, il faut se rendre sur [codeclimate.com](#https://codeclimate.com) et se connecter avec son compte GitHub (dans login/Quality). On peut alors ajouter des dépôts publiques sur Code Climate.

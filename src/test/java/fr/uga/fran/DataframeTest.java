@@ -1,6 +1,7 @@
 package fr.uga.fran;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -141,6 +142,25 @@ public class DataframeTest {
 	@Test(expected = InvalidCSVFormatException.class)
 	public void testEmptyColumn() throws Exception {
 		new Dataframe("src/test/resources/emptycolumn.csv");
+	}
+	
+	@Test
+	public void testAccessByLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals("Ford", data.get(0, "Constructeur"));
+		assertEquals(1996, data.get(3, "Année"));
+		
+		assertEquals(Integer.class, data.getType("Année"));
+		assertEquals(Double.class, data.getType("Prix"));
+		assertEquals(String.class, data.getType("Modèle"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAccessByWrongLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data.get(0, "Wrong Label");
 	}
 	
 }

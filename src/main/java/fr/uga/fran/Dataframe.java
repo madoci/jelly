@@ -101,12 +101,20 @@ public class Dataframe {
 		return columns.get(column).get(line);
 	}
 	
+	public Object get(int line, String label) throws IllegalArgumentException {
+		return get(line, labelToIndexStrict(label));
+	}
+	
 	public String getLabel(int column) {
 		return columns.get(column).getLabel();
 	}
 	
 	public Class<?> getType(int column) {
 		return columns.get(column).getType();
+	}
+	
+	public Class<?> getType(String label) throws IllegalArgumentException {
+		return getType(labelToIndexStrict(label));
 	}
 	
 	public void addLine(Object line[]) {
@@ -123,5 +131,22 @@ public class Dataframe {
 	
 	private void addColumn(Class<?> type, String label) {
 		columns.add(new Column(type, label));
+	}
+	
+	private int labelToIndex(String label) {
+		for (int i=0; i<columns.size(); i++) {
+			if (columns.get(i).getLabel().equals(label)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	private int labelToIndexStrict(String label) throws IllegalArgumentException {
+		int index = labelToIndex(label);
+		if (index == -1) {
+			throw new IllegalArgumentException("Label " + label + " does not belong to this dataframe");
+		}
+		return index;
 	}
 }

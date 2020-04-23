@@ -8,8 +8,9 @@
 - [Workflow](#workflow)  
   - [Créer une nouvelle branche](#creer-une-nouvelle-branche)
   - [Ouvrir une pull request](#ouvrir-une-pull-request)
-  - [Fermer la pull request et créer une release](#fermer-la-pull-request)
+  - [Fermer la pull request](#fermer-la-pull-request)
   - [Supprimer la branche](#supprimer-la-branche)
+  - [Créer une release](#creer-une-release)
 - [Déployer le logiciel](#deployer-le-logiciel)  
   - [Déployer sur GitHub Releases](#deployer-sur-github-releases)
   - [Déployer sur GitHub Packages](#deployer-sur-github-packages)
@@ -136,22 +137,26 @@ git push -u origin <branch-name>
 Une fois la fonctionnalité ou correction terminée, une pull request doit être ouverte sur GitHub.  
 Il faut alors mettre à jour la nouvelle branche par rapport à *master* si elle ne l'est pas, puis corriger les éventuels conflits ou erreurs jusqu'à ce que le build de pull request de Travis CI réussisse.
 
-### Fermer la pull request et créer une release <a name="fermer-la-pull-request"></a>
-Lorsque la nouvelle branche est jugée prête à la production, il revient à l'administrateur de :
-1. **Fusionner la pull request** sur *master*
-2. **Changer la version du POM** pour indiquer la version de release (non SNAPSHOT) et commit directement sur master
-3. **Créer une release** sur GitHub en la taggant avec "vX.Y.Z"
-4. **Ajouter le JAR** à la release
-5. **Changer la version du POM** vers une nouvelle version de développment (version SNAPSHOT)
-
-> Le script [release.sh](../scripts/release.sh) permet de simplifier le processus de release en regroupant les étapes 2, 3 et 5. L'étape 4 peut être réalisée automatiquement avec Travis CI (cf. [Déployer sur GitHub releases](#deployer-sur-github-releases)).
+### Fermer la pull request <a name="fermer-la-pull-request"></a>
+Lorsque la nouvelle branche a été passée en revue par les collaborateurs, que les éventuelles corrections ont été appliquées et qu'elle est jugée prête à la production, la pull request peut être fermée en fusionnant la branche sur *master* directement depuis GitHub (dans l'onglet **Pull requests** de son dépôt).
 
 ### Supprimer la branche
-Enfin, lorsque la branche a été fusionnée sur *master* et qu'elle est jugée terminée, elle est fermée sur le dépôt local puis sur le dépôt distant :
+Enfin, lorsque la branche a été fusionnée sur *master*, elle peut être supprimée sur le dépôt local et sur le dépôt distant :
 ```
 git branch -d <branch-name>
 git push origin --delete <branch-name>
 ```
+
+### Créer une release <a name="creer-une-release"></a>
+Quand la branche *master* est jugée suffisamment avancée depuis la dernière release, un nouvelle release est créée par l'administrateur en suivant ces étapes :
+1. **Changer la version du POM** pour indiquer la version de release (non SNAPSHOT) et commit directement sur master
+2. **Créer une release** sur GitHub en la taggant avec "vX.Y.Z"
+3. **Ajouter le JAR** à la release
+4. **Changer la version du POM** vers une nouvelle version de développment (version SNAPSHOT)
+
+> Le script [release.sh](../scripts/release.sh) permet de simplifier le processus de release en regroupant les étapes 1, 2 et 4. L'étape 3 peut être réalisée automatiquement avec Travis CI (cf. [Déployer sur GitHub releases](#deployer-sur-github-releases)).
+
+> Dans un contexte de livraison continue, il est recommandé de sortir des releases très régulièrement, voir à chaque fois qu'une pull request est fusionnée sur *master*.
 
 
 # Déployer le logiciel <a name="deployer-le-logiciel"></a>

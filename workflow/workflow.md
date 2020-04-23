@@ -144,7 +144,7 @@ Lorsque la nouvelle branche est jugée prête à la production, il revient à l'
 4. **Ajouter le JAR** à la release
 5. **Changer la version du POM** vers une nouvelle version de développment (version SNAPSHOT)
 
-> Le script [release.sh](./scripts/release.sh) permet de simplifier le processus de release en regroupant les étapes 2, 3 et 5. L'étape 4 peut être réalisée automatiquement avec Travis CI (cf. [Déployer sur GitHub releases](#deployer-sur-github-releases)).
+> Le script [release.sh](../scripts/release.sh) permet de simplifier le processus de release en regroupant les étapes 2, 3 et 5. L'étape 4 peut être réalisée automatiquement avec Travis CI (cf. [Déployer sur GitHub releases](#deployer-sur-github-releases)).
 
 ### Supprimer la branche
 Enfin, lorsque la branche a été fusionnée sur *master* et qu'elle est jugée terminée, elle est fermée sur le dépôt local puis sur le dépôt distant :

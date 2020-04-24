@@ -196,6 +196,7 @@ public class DataframeTest {
 		assertEquals(viewer.tail(data), data.tail());
 		assertEquals(viewer.head(data, 0), data.head(0));
 		assertEquals(viewer.tail(data, 2), data.tail(2));
+		assertEquals(viewer.view(data), data.toString());
 	}
 	
 }

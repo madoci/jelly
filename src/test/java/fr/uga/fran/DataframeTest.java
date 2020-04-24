@@ -120,7 +120,7 @@ public class DataframeTest {
 		
 		Object[] line = { year, make, model };
 		
-		data.addLine(line);
+		data.addRow(line);
 		
 		assertEquals(year, (int) data.get(4, 0));
 		assertEquals(make, (String) data.get(4, 1));
@@ -161,6 +161,14 @@ public class DataframeTest {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		
 		data.get(0, "Wrong Label");
+	}
+	
+	@Test
+	public void testCount() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals(4, data.rowCount());
+		assertEquals(5, data.columnCount());
 	}
 	
 }

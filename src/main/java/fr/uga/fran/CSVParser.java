@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * A CSV parser that can read and parse CSV files. 
+ * A CSV parser that can read and parse CSV files.
  * This class uses a Scanner to read the file.
+ *
  * @author ANDRE Stephen
  * @author FREBY Laura
- * @version
  * @since 0.2.0
  */
 public class CSVParser {
@@ -19,9 +19,10 @@ public class CSVParser {
 	int lineNumber;		// Current line number for debug only
 	
 	/**
-	 * Constructs a CSVParser from the specified file. 
-	 * @param pathname	the path of the CSV file to parse
-	 * @throws FileNotFoundException if the file at pathname is not found
+	 * Constructs a CSVParser from the specified file.
+	 *
+	 * @param pathname the path of the CSV file to parse
+	 * @throws java.io.FileNotFoundException if the file at pathname is not found
 	 */
 	public CSVParser(String pathname) throws FileNotFoundException {
 		scanner = new Scanner(new File(pathname));
@@ -29,10 +30,11 @@ public class CSVParser {
 	}
 	
 	/**
-	 * Parses the current line of the CSV file, and advances to the next line. 
+	 * Parses the current line of the CSV file, and advances to the next line.
 	 * First call of this method will parse the first line of the file.
+	 *
 	 * @return an array of all data read on the current line, or null if
-	 * @throws InvalidCSVFormatException if the file misses a closing double quote on a line
+	 * @throws fr.uga.fran.InvalidCSVFormatException if the file misses a closing double quote on a line
 	 */
 	public Object[] readLine() throws InvalidCSVFormatException {
 		// If the scanner is at the end of the file, return null
@@ -95,7 +97,9 @@ public class CSVParser {
 	}
 	
 	
-	/** Private methods **/
+	/*---------------------------------*/
+	/*-----    Private methods    -----*/
+	/*---------------------------------*/
 	
 	// Convert a String object into the interpreted type (Integer, Double or String)
 	private Object processData(String data) {

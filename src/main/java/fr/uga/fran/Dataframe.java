@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A two-dimensional table with heterogeneous data types.
  * Each column is labeled with a name and contains data of a single type.
- * Two columns of the same Dataframe can contain data of different types.
+ * Two columns of the same dataframe can contain data of different types.
  *
  * @author ANDRE Stephen
  * @author FREBY Laura
@@ -38,16 +38,18 @@ public class Dataframe {
 	}
 	
 	private List<Column> columns;
+	private int rowCount;
 	
 	/**
-	 * Constructs a Dataframe from an array of labels and arrays of columns.
+	 * Constructs a dataframe from an array of labels and arrays of columns.
 	 *
 	 * @param labels the array of labels, in the same order as the columns
 	 * @param data variable amount of arrays each containing the content of a column
 	 */
 	public Dataframe(String labels[], Object[] ...data) {
-		columns = new ArrayList<>();
-		int numLines = 0;
+		this();
+		
+		int numRows = 0;
 		
 		// Add columns
 		for (int i=0; i<data.length; i++) {
@@ -60,28 +62,28 @@ public class Dataframe {
 			// The data type of the column is retrieved from the first element of this column
 			addColumn(data[i][0].getClass(), label);
 			
-			// Keep track of the maximum number of lines between all columns
-			if (data[i].length > numLines) {
-				numLines = data[i].length;
+			// Keep track of the maximum number of rows between all columns
+			if (data[i].length > numRows) {
+				numRows = data[i].length;
 			}
 		}
 		
-		// Add lines
-		for (int i=0; i<numLines; i++) {
-			Object line[] = new Object[columns.size()];
+		// Add rows
+		for (int i=0; i<numRows; i++) {
+			Object row[] = new Object[columns.size()];
 			for (int j=0; j<columns.size(); j++) {
 				if (i < data[j].length) {
-					line[j] = data[j][i];
+					row[j] = data[j][i];
 				} else {
-					line[j] = null;
+					row[j] = null;
 				}
 			}
-			addLine(line);
+			addRow(row);
 		}
 	}
 	
 	/**
-	 * Constructs a Dataframe from a CSV file.
+	 * Constructs a dataframe from a CSV file.
 	 *
 	 * @param pathname pathname of the CSV file to use
 	 * @throws java.io.FileNotFoundException if the file at pathname is not found
@@ -89,11 +91,11 @@ public class Dataframe {
 	 * @since 0.2.0
 	 */
 	public Dataframe(String pathname) throws FileNotFoundException, InvalidCSVFormatException {
-		columns = new ArrayList<>();
+		this();
 		
 		CSVParser parser = new CSVParser(pathname);
 		
-		// First line of the file contains the labels
+		// First row of the file contains the labels
 		Object[] labels = parser.readLine();
 		if (labels == null) {
 			throw new InvalidCSVFormatException("file is empty");
@@ -126,34 +128,34 @@ public class Dataframe {
 			addColumn(lines.get(j)[i].getClass(), (String) labels[i]);
 		}
 		
-		// Add lines
-		for (Object[] line : lines) {
-			addLine(line);
+		// Add rows
+		for (Object[] row : lines) {
+			addRow(row);
 		}
 	}
 	
 	/**
-	 * Access a single element from a pair of line/column indexes.
+	 * Access a single element from a pair of row/column indexes.
 	 *
-	 * @param line the line index
+	 * @param row the row index
 	 * @param column the column index
-	 * @return the element located at indexes (line, column)
+	 * @return the element located at indexes (row, column)
 	 */
-	public Object get(int line, int column) {
-		return columns.get(column).get(line);
+	public Object get(int row, int column) {
+		return columns.get(column).get(row);
 	}
 	
 	/**
-	 * Access a single element from a line index and a column label.
+	 * Access a single element from a row index and a column label.
 	 *
-	 * @param line	the line index
+	 * @param row	the row index
 	 * @param label	the column label
-	 * @return the element located on column label at index line
-	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this Dataframe
+	 * @return the element located on column label at index row
+	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this dataframe
 	 * @since 0.3.0
 	 */
-	public Object get(int line, String label) throws IllegalArgumentException {
-		return get(line, labelToIndexStrict(label));
+	public Object get(int row, String label) throws IllegalArgumentException {
+		return get(row, labelToIndexStrict(label));
 	}
 	
 	/**
@@ -181,7 +183,7 @@ public class Dataframe {
 	 *
 	 * @param label the column label
 	 * @return the data type of the column labeled as label
-	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this Dataframe
+	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this dataframe
 	 * @since 0.3.0
 	 */
 	public Class<?> getType(String label) throws IllegalArgumentException {
@@ -189,24 +191,50 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Add a line of data to this Dataframe.
+	 * Add a row of data to this dataframe.
 	 *
-	 * @param line the array of line data to add
+	 * @param row the array of row data to add
 	 */
-	public void addLine(Object line[]) {
+	public void addRow(Object row[]) {
 		for (int i=0; i<columns.size(); i++) {
-			if (i < line.length) {
-				columns.get(i).add(line[i]);
+			if (i < row.length) {
+				columns.get(i).add(row[i]);
 			} else {
 				columns.get(i).add(null);
 			}
 		}
+		rowCount++;
+	}
+	
+	/**
+	 * Returns the number of rows in this dataframe.
+	 * Only data rows are counted, not labels.
+	 * 
+	 * @return the number of rows in this dataframe
+	 */
+	public int rowCount() {
+		return rowCount;
+	}
+	
+	/**
+	 * Returns the number of columns in this dataframe.
+	 * 
+	 * @return the number of columns in this dataframe
+	 */
+	public int columnCount() {
+		return columns.size();
 	}
 	
 	
 	/*---------------------------------*/
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
+	
+	// Private default constructor
+	private Dataframe() {
+		columns = new ArrayList<>();
+		rowCount = 0;
+	}
 	
 	// Add to this Dataframe a labeled column of given data type
 	private void addColumn(Class<?> type, String label) {

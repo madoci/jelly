@@ -17,19 +17,19 @@ public class DataframeTest {
 		
 		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
 		
-		// VÃ©rifie les types
+		// Vérifie les types
 		assertEquals(String.class, data.getType(0));
 		assertEquals(String.class, data.getType(1));
 		assertEquals(Integer.class, data.getType(2));
 		assertEquals(Double.class, data.getType(3));
 
-		// VÃ©rifie les labels
+		// Vérifie les labels
 		for (int i=0; i<3; i++) {
 			assertEquals(labels[i], data.getLabel(i));
 		}
 		assertEquals("", data.getLabel(3));
 		
-		// VÃ©rifie chaque Ã©lÃ©ment de chaque ligne
+		// Vérifie chaque élément de chaque ligne
 		for (int i=0; i<3; i++) {
 			String surname = (String) data.get(i, 0);
 			String name = (String) data.get(i, 1);
@@ -148,7 +148,7 @@ public class DataframeTest {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		
 		int[] i = {1, 2};
-		Dataframe newData = data.selectLines(i);
+		Dataframe newData = data.selectRows(i);
 		assertEquals(1999, (int) newData.get(0, 0));
 		assertEquals("Chevy", (String) newData.get(0, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) newData.get(0, 2));
@@ -160,6 +160,25 @@ public class DataframeTest {
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) newData.get(1, 2));
 		assertNull(newData.get(0, 3));
 		assertEquals(5000.00, (double) newData.get(1, 4), 0.005);
+	}
+	
+	@Test
+	public void testSelectColumns() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		String[] i = {"Constructeur", "Description"};
+		Dataframe newData = data.selectColumns(i);
+		assertEquals("Ford", (String) newData.get(0, 0));
+		assertEquals("ac, abs, moon", (String) newData.get(0, 1));
+		
+		assertEquals("Chevy", (String) newData.get(1, 0));
+		assertNull(newData.get(1, 1));
+		
+		assertEquals("Chevy", (String) newData.get(2, 0));
+		assertNull(newData.get(2, 1));
+		
+		assertEquals("Jeep", (String) newData.get(3, 0));
+		assertEquals("MUST SELL! air, moon roof, loaded", (String) newData.get(3, 1));
 	}
 	
 	public void testAccessByLabel() throws Exception {

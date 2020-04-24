@@ -207,7 +207,7 @@ public class Dataframe {
 	}
 	
 
-	public Dataframe selectLines(int[] index) {
+	public Dataframe selectRows(int[] index) {
 		int nbCol = this.columns.size();
 		Dataframe newDataframe = new Dataframe();
 		Object[] row = new Object[nbCol];
@@ -223,9 +223,23 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
-	public Dataframe selectColumns(String[] label) {
-		
-		return null;
+	public Dataframe selectColumns(String[] label) throws IllegalArgumentException {
+		Dataframe newDataframe = new Dataframe();
+		int index;
+		int cpt=0;
+		for(String s : label) {
+			index = this.labelToIndexStrict(s);
+			newDataframe.addColumn(this.columns.get(index).getType(), this.columns.get(index).getLabel());
+			cpt++;
+		}
+		Object[] row = new Object[cpt];
+		for(int i=0; i<this.rowCount; i++) {
+			for(int j=0; j<cpt; j++) {
+				row[j] = get(i, labelToIndex(newDataframe.getLabel(j)));
+			}
+			newDataframe.addRow(row);
+		}
+		return newDataframe;
 	}
 	
 	/**

@@ -171,4 +171,31 @@ public class DataframeTest {
 		assertEquals(5, data.columnCount());
 	}
 	
+	@Test
+	public void testDefaultViewer() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		TabularDataframeViewer viewer = new TabularDataframeViewer();
+		
+		assertEquals(viewer.view(data), data.view());
+		assertEquals(viewer.head(data), data.head());
+		assertEquals(viewer.tail(data), data.tail());
+		assertEquals(viewer.head(data, 0), data.head(0));
+		assertEquals(viewer.tail(data, 2), data.tail(2));
+	}
+	
+	@Test
+	public void testSetViewer() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		TabularDataframeViewer viewer = new TabularDataframeViewer();
+		viewer.setSeparator(" | ");
+		viewer.setSampleSize(3);
+		data.setViewer(viewer);
+		
+		assertEquals(viewer.view(data), data.view());
+		assertEquals(viewer.head(data), data.head());
+		assertEquals(viewer.tail(data), data.tail());
+		assertEquals(viewer.head(data, 0), data.head(0));
+		assertEquals(viewer.tail(data, 2), data.tail(2));
+	}
+	
 }

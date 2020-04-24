@@ -226,10 +226,6 @@ public class Dataframe {
 		return columns.size();
 	}
 
-	public DataframeViewer getViewer() {
-		return viewer;
-	}
-
 	public void setViewer(DataframeViewer viewer) {
 		this.viewer = viewer;
 	}

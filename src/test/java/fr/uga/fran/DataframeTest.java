@@ -18,19 +18,19 @@ public class DataframeTest {
 		
 		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
 		
-		// Vérifie les types
+		// Check types
 		assertEquals(String.class, data.getType(0));
 		assertEquals(String.class, data.getType(1));
 		assertEquals(Integer.class, data.getType(2));
 		assertEquals(Double.class, data.getType(3));
 
-		// Vérifie les labels
+		// Check labels
 		for (int i=0; i<3; i++) {
 			assertEquals(labels[i], data.getLabel(i));
 		}
 		assertEquals("", data.getLabel(3));
 		
-		// Vérifie chaque élément de chaque ligne
+		// Check each element of each row
 		for (int i=0; i<3; i++) {
 			String surname = (String) data.get(i, 0);
 			String name = (String) data.get(i, 1);
@@ -67,42 +67,42 @@ public class DataframeTest {
 	public void testCSVConstructor() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		
-		// Types
+		// Check types
 		assertEquals(Integer.class, data.getType(0));
 		assertEquals(String.class, data.getType(1));
 		assertEquals(String.class, data.getType(2));
 		assertEquals(String.class, data.getType(3));
 		assertEquals(Double.class, data.getType(4));
 		
-		// Labels
+		// Check labels
 		assertEquals("Année", (String) data.getLabel(0));
 		assertEquals("Constructeur", (String) data.getLabel(1));
 		assertEquals("Modèle", (String) data.getLabel(2));
 		assertEquals("Description", (String) data.getLabel(3));
 		assertEquals("Prix", (String) data.getLabel(4));
 		
-		// Ligne 1
+		// Check row 1
 		assertEquals(1997, (int) data.get(0, 0));
 		assertEquals("Ford", (String) data.get(0, 1));
 		assertEquals("E350", (String) data.get(0, 2));
 		assertEquals("ac, abs, moon", (String) data.get(0, 3));
 		assertEquals(3000., (double) data.get(0, 4), 0.005);
 		
-		// Ligne 2
+		// Check row 2
 		assertEquals(1999, (int) data.get(1, 0));
 		assertEquals("Chevy", (String) data.get(1, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) data.get(1, 2));
 		assertNull(data.get(1, 3));
 		assertEquals(4900., (double) data.get(1, 4), 0.005);
 		
-		// Ligne 3
+		// Check row 3
 		assertEquals(1999, (int) data.get(2, 0));
 		assertEquals("Chevy", (String) data.get(2, 1));
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) data.get(2, 2));
 		assertNull(data.get(2, 3));
 		assertEquals(5000., (double) data.get(2, 4), 0.005);
 		
-		// Ligne 4
+		// Check row 4
 		assertEquals(1996, (int) data.get(3, 0));
 		assertEquals("Jeep", (String) data.get(3, 1));
 		assertEquals("Grand Cherokee", (String) data.get(3, 2));

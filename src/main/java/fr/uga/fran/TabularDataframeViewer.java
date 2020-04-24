@@ -1,9 +1,25 @@
 package fr.uga.fran;
 
+/**
+ * A dataframe viewer representing dataframes in simple tabular form.
+ * Each column are separated by a unique string that can be defined by the user.
+ * The first row of any representation shows the labels, and then each row is directly
+ * followed by a line separator.
+ * 
+ * @author ANDRE Stephen
+ * @author FREBY Laura
+ * @since 0.3.0
+ * @see fr.uga.fran.Dataframe
+ */
 public class TabularDataframeViewer implements DataframeViewer {
 	private String separator;
 	private int sampleSize;
 	
+	/**
+	 * Constructs a TabularDataframeViewer with default values.
+	 * The default value for the separator between columns is " ".
+	 * The default value for the number of rows to display with methods head(Dataframe) and tail(Dataframe) is 5.
+	 */
 	public TabularDataframeViewer() {
 		separator = " ";
 		sampleSize = 5;
@@ -34,10 +50,20 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return dataframeToString(dataframe, dataframe.rowCount()-num, dataframe.rowCount()-1);
 	}
 	
+	/**
+	 * Set the separator string used between the columns of a dataframe.
+	 * 
+	 * @param separator the separator to be used
+	 */
 	public void setSeparator(String separator) {
 		this.separator = separator;
 	}
 	
+	/**
+	 * Set the number of rows displayed by the methods head(Dataframe) and tail(Dataframe).
+	 * 
+	 * @param sampleSize the number of rows to display
+	 */
 	public void setSampleSize(int sampleSize) {
 		this.sampleSize = sampleSize;
 	}

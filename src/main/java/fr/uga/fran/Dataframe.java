@@ -8,10 +8,14 @@ import java.util.List;
  * A two-dimensional table with heterogeneous data types.
  * Each column is labeled with a name and contains data of a single type.
  * Two columns of the same dataframe can contain data of different types.
+ * String representations of a dataframe are obtained by a DataframeViewer.
+ * By default, the viewer used is a TabularDataframeViewer.
  *
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.1.0
+ * @see fr.uga.fran.DataframeViewer
+ * @see fr.uga.fran.TabularDataframeViewer
  */
 public class Dataframe {
 	// Class for the labeled columns inside a Dataframe
@@ -195,6 +199,7 @@ public class Dataframe {
 	 * Add a row of data to this dataframe.
 	 *
 	 * @param row the array of row data to add
+	 * @since 0.3.0
 	 */
 	public void addRow(Object row[]) {
 		for (int i=0; i<columns.size(); i++) {
@@ -212,6 +217,7 @@ public class Dataframe {
 	 * Only data rows are counted, not labels.
 	 *
 	 * @return the number of rows in this dataframe
+	 * @since 0.3.0
 	 */
 	public int rowCount() {
 		return rowCount;
@@ -221,31 +227,75 @@ public class Dataframe {
 	 * Returns the number of columns in this dataframe.
 	 *
 	 * @return the number of columns in this dataframe
+	 * @since 0.3.0
 	 */
 	public int columnCount() {
 		return columns.size();
 	}
 
+	/**
+	 * Set the viewer to be used by this dataframe.
+	 * 
+	 * @param viewer viewer to be used by this dataframe
+	 * @since 0.3.0
+	 */
 	public void setViewer(DataframeViewer viewer) {
 		this.viewer = viewer;
 	}
 
+	/**
+	 * Returns a string representation of this entire dataframe.
+	 * Uses the viewer set (or the default one) to get the representation.
+	 * 
+	 * @return a string representation of this entire dataframe
+	 * @since 0.3.0
+	 */
 	public String view() {
 		return viewer.view(this);
 	}
 
+	/**
+	 * Returns a string representation of the first rows of this dataframe.
+	 * Uses the viewer set (or the default one) to get the representation.
+	 * 
+	 * @return a string representation of the first rows of this dataframe
+	 * @since 0.3.0
+	 */
 	public String head() {
 		return viewer.head(this);
 	}
 
+	/**
+	 * Returns a string representation of the first rows of this dataframe with the specified number of rows.
+	 * Uses the viewer set (or the default one) to get the representation.
+	 * 
+	 * @param num the number of rows to display
+	 * @return a string representation of the first rows of this dataframe
+	 * @since 0.3.0
+	 */
 	public String head(int num) {
 		return viewer.head(this, num);
 	}
 
+	/**
+	 * Returns a string representation of the last rows of this dataframe.
+	 * Uses the viewer set (or the default one) to get the representation.
+	 * 
+	 * @return a string representation of the last rows of this dataframe
+	 * @since 0.3.0
+	 */
 	public String tail() {
 		return viewer.tail(this);
 	}
 
+	/**
+	 * Returns a string representation of the last rows of this dataframe with the specified number of rows.
+	 * Uses the viewer set (or the default one) to get the representation.
+	 * 
+	 * @param num the number of rows to display
+	 * @return a string representation of the last rows of this dataframe
+	 * @since 0.3.0
+	 */
 	public String tail(int num) {
 		return viewer.tail(this, num);
 	}

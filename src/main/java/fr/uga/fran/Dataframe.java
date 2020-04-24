@@ -119,7 +119,27 @@ public class Dataframe {
 		}
 	}
 	
+	public Dataframe selectLines(int[] index) {
+		int nbCol = this.columns.size();
+		Dataframe newDataframe = new Dataframe();
+		Object[] line = new Object[nbCol];
+		for (int i=0; i<nbCol; i++) {
+			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
+		}
+		for(Integer i : index) {
+			for(int j=0; j<nbCol; j++) {
+				line[j] = this.get(i, j);
+			}
+			newDataframe.addLine(line);
+		}
+		return newDataframe;
+	}
+	
 	/** Private methods **/
+	
+	private Dataframe() {
+		columns = new ArrayList<>();
+	}
 	
 	private void addColumn(Class<?> type, String label) {
 		columns.add(new Column(type, label));

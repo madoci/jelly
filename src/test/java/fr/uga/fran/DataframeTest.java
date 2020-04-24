@@ -1,6 +1,10 @@
 package fr.uga.fran;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -141,6 +145,25 @@ public class DataframeTest {
 	@Test(expected = InvalidCSVFormatException.class)
 	public void testEmptyColumn() throws Exception {
 		new Dataframe("src/test/resources/emptycolumn.csv");
+	}
+	
+	@Test
+	public void testSelectLines() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		int[] i = {1, 2};
+		Dataframe newData = data.selectLines(i);
+		assertEquals(1999, (int) newData.get(0, 0));
+		assertEquals("Chevy", (String) newData.get(0, 1));
+		assertEquals("Venture \"Extended Edition\"", (String) newData.get(0, 2));
+		assertNull(newData.get(0, 3));
+		assertEquals(4900.00, (double) newData.get(0, 4), 0.005);
+		
+		assertEquals(1999, (int) newData.get(1, 0));
+		assertEquals("Chevy", (String) newData.get(1, 1));
+		assertEquals("Venture \"Extended Edition, Very Large\"", (String) newData.get(1, 2));
+		assertNull(newData.get(0, 3));
+		assertEquals(5000.00, (double) newData.get(1, 4), 0.005);
 	}
 	
 }

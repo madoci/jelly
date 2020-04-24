@@ -62,23 +62,27 @@ public class CSVParser {
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
 	
+	// A scanner to parse a CSV format line
 	private class CSVStringScanner {
 		private String string;
 		private int position;
 		
+		// Constructs a CSVStringScanner with the specified string to be parsed
 		public CSVStringScanner(String string) {
 			this.string = string;
 			this.position = 0;
 		}
 		
+		// Returns true if the string to be parsed has another CSV field
 		public boolean hasNextField() {
 			return position <= string.length();
 		}
 		
+		// Returns the next field of the string
 		public String nextField() throws InvalidCSVFormatException {
 			String field = new String();
 			
-			while (position < string.length() && currentChar() != ',') {
+			while (currentChar() != ',') {
 				if (currentChar() == '"') {
 					position++;
 					field = nextQuote();
@@ -92,15 +96,20 @@ public class CSVParser {
 			return field;
 		}
 		
+		// Advances to the next not-paired double quote and returns the string skipped
 		private String nextQuote() throws InvalidCSVFormatException {
 			String quote = new String();
 			
 			while (position < string.length()) {
 				if (currentChar() == '"') {
+					// We check the character right after the double quote
 					position++;
-					if (position < string.length() && currentChar() == '"') {
+					
+					// If it's a pair of double quote, we add one and skip it
+					if (currentChar() == '"') {
 						quote += '"';
 					} else {
+						// We move one backward to ensure we aim at the closing double quote
 						position--;
 						break;
 					}
@@ -110,14 +119,21 @@ public class CSVParser {
 				position++;
 			}
 			
-			if (position >= string.length() || currentChar() != '"') {
+			// If the current character isn't a double quote, the format is invalid
+			if (currentChar() != '"') {
 				throw new InvalidCSVFormatException("missing '\"' at line " + lineNumber);
 			}
 			
 			return quote;
 		}
 		
-		private char currentChar() { return string.charAt(position); }
+		// Returns the current character, or ',' if the scanner is passed the end of the string
+		private char currentChar() {
+			if (position >= string.length()) {
+				return ',';
+			}
+			return string.charAt(position);
+		}
 	}
 	
 	// Convert a String object into the interpreted type (Integer, Double or String)

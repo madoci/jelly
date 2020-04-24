@@ -38,6 +38,8 @@ public class Dataframe {
 	}
 	
 	private List<Column> columns;
+	private int lineCount;
+	private DataframeViewer viewer;
 	
 	/**
 	 * Constructs a Dataframe from an array of labels and arrays of columns.
@@ -46,7 +48,8 @@ public class Dataframe {
 	 * @param data variable amount of arrays each containing the content of a column
 	 */
 	public Dataframe(String labels[], Object[] ...data) {
-		columns = new ArrayList<>();
+		this();
+		
 		int numLines = 0;
 		
 		// Add columns
@@ -89,7 +92,7 @@ public class Dataframe {
 	 * @since 0.2.0
 	 */
 	public Dataframe(String pathname) throws FileNotFoundException, InvalidCSVFormatException {
-		columns = new ArrayList<>();
+		this();
 		
 		CSVParser parser = new CSVParser(pathname);
 		
@@ -201,12 +204,61 @@ public class Dataframe {
 				columns.get(i).add(null);
 			}
 		}
+		lineCount++;
+	}
+	
+	public int lineCount() {
+		return lineCount;
+	}
+	
+	public int columnCount() {
+		return columns.size();
+	}
+	
+	public DataframeViewer getViewer() {
+		return viewer;
+	}
+	
+	public void setViewer(DataframeViewer viewer) {
+		this.viewer = viewer;
+	}
+	
+	public String view() {
+		return viewer.view(this);
+	}
+
+	public String head() {
+		return viewer.head(this);
+	}
+
+	public String head(int num) {
+		return viewer.head(this, num);
+	}
+
+	public String tail() {
+		return viewer.tail(this);
+	}
+
+	public String tail(int num) {
+		return viewer.tail(this, num);
+	}
+	
+	@Override
+	public String toString() {
+		return view();
 	}
 	
 	
 	/*---------------------------------*/
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
+	
+	// Private default constructor
+	private Dataframe() {
+		columns = new ArrayList<>();
+		lineCount = 0;
+		viewer = new TabularDataframeViewer();
+	}
 	
 	// Add to this Dataframe a labeled column of given data type
 	private void addColumn(Class<?> type, String label) {

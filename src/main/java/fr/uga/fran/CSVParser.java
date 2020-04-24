@@ -14,7 +14,7 @@ import java.util.Scanner;
  * @author FREBY Laura
  * @since 0.2.0
  */
-public class CSVParser {
+public class CSVParser {	
 	Scanner scanner;	// Scanner to read the file
 	int lineNumber;		// Current line number for debug only
 	
@@ -35,7 +35,7 @@ public class CSVParser {
 	 *
 	 * @return an array of all data read on the current line, or null if
 	 * @throws fr.uga.fran.InvalidCSVFormatException if the file misses a closing double quote on a line
-	 */
+	 */	
 	public Object[] readLine() throws InvalidCSVFormatException {
 		// If the scanner is at the end of the file, return null
 		if (!scanner.hasNextLine()) {
@@ -47,51 +47,12 @@ public class CSVParser {
 		lineNumber++;
 		
 		List<Object> objects = new ArrayList<>();
-		String data = "";
-		int i = 0;
+		CSVStringScanner lineScanner = new CSVStringScanner(line);
 		
-		// Read the line character by character
-		while (i < line.length()) {
-			switch (line.charAt(i)) {
-			case ',':
-				// If we find a comma, we convert the current data into the correct type,
-				// add it to the list and reset the data to an empty string
-				objects.add(processData(data));
-				data = "";
-				break;
-			case '"':
-				// If we find an opening double quote, all characters until the next closing 
-				// double quote will be part of the data.
-				i++;
-				while (i < line.length()) {
-					if (line.charAt(i) == '"') {
-						// If a double quote is directly followed by another one, it is
-						// interpreted as the double quote character.
-						// Otherwise, it is a closing double quote.
-						if (i+1 < line.length() && line.charAt(i+1) == '"') {
-							i++;
-						} else {
-							break;
-						}
-					}
-					data += line.charAt(i);
-					i++;
-				}
-				// If we're at the end of the line and no closing double quote has been found,
-				// the format of the CSV file is invalid.
-				if (i >= line.length()) {
-					throw new InvalidCSVFormatException("missing '\"' at line " + lineNumber);
-				}
-				break;
-			default:
-				data += line.charAt(i);
-				break;
-			}
-			i++;
+		while (lineScanner.hasNextField()) {
+			String field = lineScanner.nextField();
+			objects.add(processData(field));
 		}
-		
-		// Add the remaining data to the list
-		objects.add(processData(data));
 		
 		return objects.toArray();
 	}
@@ -101,22 +62,83 @@ public class CSVParser {
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
 	
+	private class CSVStringScanner {
+		private String string;
+		private int position;
+		
+		public CSVStringScanner(String string) {
+			this.string = string;
+			this.position = 0;
+		}
+		
+		public boolean hasNextField() {
+			return position <= string.length();
+		}
+		
+		public String nextField() throws InvalidCSVFormatException {
+			String field = new String();
+			
+			while (position < string.length() && currentChar() != ',') {
+				if (currentChar() == '"') {
+					position++;
+					field = nextQuote();
+				} else {
+					field += currentChar();
+				}
+				position++;
+			}
+			position++;
+			
+			return field;
+		}
+		
+		private String nextQuote() throws InvalidCSVFormatException {
+			String quote = new String();
+			
+			while (position < string.length()) {
+				if (currentChar() == '"') {
+					position++;
+					if (position < string.length() && currentChar() == '"') {
+						quote += '"';
+					} else {
+						position--;
+						break;
+					}
+				} else {
+					quote += currentChar();
+				}
+				position++;
+			}
+			
+			if (position >= string.length() || currentChar() != '"') {
+				throw new InvalidCSVFormatException("missing '\"' at line " + lineNumber);
+			}
+			
+			return quote;
+		}
+		
+		private char currentChar() { return string.charAt(position); }
+	}
+	
 	// Convert a String object into the interpreted type (Integer, Double or String)
 	private Object processData(String data) {
-		Object obj = null;
+		// If data is empty, we return null
+		if (data.length() == 0) {
+			return null;
+		}
 		
-		if (data.length() > 0) {
-			// We first try to convert it into an Integer
+		Object obj;
+		
+		// We first try to convert it into an Integer
+		try {
+			obj = Integer.valueOf(data);
+		} catch (Exception notInt) {
+			// If it fails, we then try to convert it into a Double
 			try {
-				obj = Integer.valueOf(data);
-			} catch (Exception notInt) {
-				// If it fails, we then try to convert it into a Double
-				try {
-					obj = Double.valueOf(data);
-				} catch (Exception notDouble) {
-					// If it fails again, we keep it as a String
-					obj = data;
-				}
+				obj = Double.valueOf(data);
+			} catch (Exception notDouble) {
+				// If it fails again, we keep it as a String
+				obj = data;
 			}
 		}
 		

@@ -6,8 +6,8 @@ package fr.uga.fran;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.2.0
- * @see CSVParser
- * @see Dataframe
+ * @see fr.uga.fran.CSVParser
+ * @see fr.uga.fran.Dataframe
  */
 public class InvalidCSVFormatException extends Exception {
 

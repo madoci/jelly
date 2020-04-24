@@ -1,40 +1,45 @@
 package fr.uga.fran;
 
 public class TabularDataframeViewer implements DataframeViewer {
-	
+	private String separator;
+	private int sampleSize;
 	
 	public TabularDataframeViewer() {
-		
+		separator = " ";
+		sampleSize = 5;
 	}
-
+	
 	@Override
 	public String view(Dataframe dataframe) {
-		// TODO Auto-generated method stub
-		return null;
+		return dataframeToString(dataframe, 0, dataframe.rowCount()-1);
 	}
 
 	@Override
 	public String head(Dataframe dataframe) {
-		// TODO Auto-generated method stub
-		return null;
+		return head(dataframe, sampleSize);
 	}
 
 	@Override
 	public String head(Dataframe dataframe, int num) {
-		// TODO Auto-generated method stub
-		return null;
+		return dataframeToString(dataframe, 0, num-1);
 	}
 
 	@Override
 	public String tail(Dataframe dataframe) {
-		// TODO Auto-generated method stub
-		return null;
+		return tail(dataframe, sampleSize);
 	}
 
 	@Override
 	public String tail(Dataframe dataframe, int num) {
-		// TODO Auto-generated method stub
-		return null;
+		return dataframeToString(dataframe, dataframe.rowCount()-num, dataframe.rowCount()-1);
+	}
+	
+	public void setSeparator(String separator) {
+		this.separator = separator;
+	}
+	
+	public void setSampleSize(int sampleSize) {
+		this.sampleSize = sampleSize;
 	}
 	
 	
@@ -42,16 +47,47 @@ public class TabularDataframeViewer implements DataframeViewer {
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
 	
-	private int[] columnsWidth(Dataframe dataframe) {
+	// Returns a string of labels and rows from start to end included of the specified dataframe
+	private String dataframeToString(Dataframe dataframe, int start, int end) {
+		// Ensure we don't have indexes out of bounds
+		if (start < 0) {
+			start = 0;
+		}
+		if (end >= dataframe.rowCount()) {
+			end = dataframe.rowCount() - 1;
+		}
+		
+		// Retrieve columns width first
+		int columnsWidth[] = columnsWidth(dataframe, start, end);
+		
+		// Add the labels
+		String result = labelsToString(dataframe, columnsWidth) + System.lineSeparator();
+		
+		// Add all rows specified
+		for (int i=start; i<=end; i++) {
+			result += rowToString(dataframe, columnsWidth, i) + System.lineSeparator();
+		}
+		
+		return result;
+	}
+	
+	// Returns an array of all columns width from the specified dataframe
+	private int[] columnsWidth(Dataframe dataframe, int start, int end) {
 		int columnsWidth[] = new int[dataframe.columnCount()];
 		
+		// For each column
 		for (int i=0; i<dataframe.columnCount(); i++) {
-			columnsWidth[i] = 0;
-			for (int j=0; j<dataframe.lineCount(); i++) {
+			// Initialize column width with the label's width
+			columnsWidth[i] = dataframe.getLabel(i).length();
+			
+			// For each row, search the maximum width for column i
+			for (int j=start; j<=end; j++) {
 				Object object = dataframe.get(j, i);
 				
 				if (object != null) {
 					String word = object.toString();
+					
+					// Update maximum width
 					if (word.length() > columnsWidth[i]) {
 						columnsWidth[i] = word.length();
 					}
@@ -62,59 +98,70 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return columnsWidth;
 	}
 	
+	// Returns a string of all labels of the specified dataframe
 	private String labelsToString(Dataframe dataframe, int[] columnsWidth) {
-		String labels = new String();
+		// Any line begins with a separator
+		String labels = separator;
 		
+		// For each column
 		for (int i=0; i<dataframe.columnCount(); i++) {
 			String label = dataframe.getLabel(i);
 			
-			// Padding to align columns		
+			// Padding to align columns
 			label = rightPadding(label, columnsWidth[i]);
 			
-			labels += label + " ";
+			labels += label + separator;
 		}
 		
 		return labels;
 	}
 	
-	private String lineToString(Dataframe dataframe, int[] columnsWidth, int index) {
-		String line = new String();
+	// Returns a string of the index-th row in the specified dataframe
+	private String rowToString(Dataframe dataframe, int[] columnsWidth, int index) {
+		// Any line begins with a separator
+		String line = separator;
 		
-		for (int i=0; i<columns.size(); i++) {
+		// For each column
+		for (int i=0; i<dataframe.columnCount(); i++) {
 			String data = new String();
 			
-			Object obj = columns.get(i).get(index);
+			// Get the object and convert it into a string
+			Object obj = dataframe.get(index, i);
 			if (obj != null) {
-				data += columns.get(i).getType().cast(obj);
+				data += obj.toString();
 			}
 			
-			// Remplissage pour l'alignement des colonnes
-			if (columns.get(i).getType() == String.class) {
-				data = rightPadding(data, columns.get(i).getWidth());
+			// Padding to align columns
+			// Numbers (int and double) are aligned to the right, any other type is aligned to the left
+			if (dataframe.getType(i) == Integer.class || dataframe.getType(i) == Double.class) {
+				data = leftPadding(data, columnsWidth[i]);
 			} else {
-				data = leftPadding(data, columns.get(i).getWidth());
+				data = rightPadding(data, columnsWidth[i]);
 			}
 			
-			line += data + " ";
+			// Add a separator between columns
+			line += data + separator;
 		}
 		
 		return line;
 	}
 	
+	// Returns a string of length size with spaces to the left of s
 	private String leftPadding(String s, int size) {
-		String res = s;
+		String result = s;
 		for (int i=0; i<size-s.length(); i++) {
-			res = " " + res;
+			result = " " + result;
 		}
-		return res;
+		return result;
 	}
 	
+	// Returns a string of length size with spaces to the right of s
 	private String rightPadding(String s, int size) {
-		String res = s;
+		String result = s;
 		for (int i=0; i<size-s.length(); i++) {
-			res += " ";
+			result += " ";
 		}
-		return res;
+		return result;
 	}
 
 }

@@ -2,10 +2,6 @@ package fr.uga.fran;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 
@@ -123,7 +119,7 @@ public class DataframeTest {
 		
 		Object[] line = { year, make, model };
 		
-		data.addLine(line);
+		data.addRow(line);
 		
 		assertEquals(year, (int) data.get(4, 0));
 		assertEquals(make, (String) data.get(4, 1));
@@ -164,6 +160,32 @@ public class DataframeTest {
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) newData.get(1, 2));
 		assertNull(newData.get(0, 3));
 		assertEquals(5000.00, (double) newData.get(1, 4), 0.005);
+	}
+	
+	public void testAccessByLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals("Ford", data.get(0, "Constructeur"));
+		assertEquals(1996, data.get(3, "Année"));
+		
+		assertEquals(Integer.class, data.getType("Année"));
+		assertEquals(Double.class, data.getType("Prix"));
+		assertEquals(String.class, data.getType("Modèle"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAccessByWrongLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data.get(0, "Wrong Label");
+	}
+	
+	@Test
+	public void testCount() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals(4, data.rowCount());
+		assertEquals(5, data.columnCount());
 	}
 	
 }

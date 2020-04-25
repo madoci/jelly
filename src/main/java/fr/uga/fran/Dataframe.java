@@ -238,7 +238,7 @@ public class Dataframe {
 	 */
 	public Dataframe selectColumns(String[] label) throws IllegalArgumentException {
 		Dataframe newDataframe = this.extractColumns(label);
-		int[] index = IntStream.rangeClosed(0, this.rowCount-1).toArray();
+		int[] index = range(0, this.rowCount);
 		newDataframe = this.extractRows(index, newDataframe);
 		return newDataframe;
 	}
@@ -329,5 +329,13 @@ public class Dataframe {
 			data.addRow(row);
 		}
 		return data;
+	}
+	
+	private int[] range(int begin, int end) {
+		int[] array = new int[end];
+		for(int i=0; i<end; i++) {
+			array[i] = i;
+		}
+		return array;
 	}
 }

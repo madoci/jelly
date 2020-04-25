@@ -3,7 +3,6 @@ package fr.uga.fran;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * A two-dimensional table with heterogeneous data types.
@@ -330,19 +329,21 @@ public class Dataframe {
 	}
 
 	/**
-	 * Returns a row subsection of a dataframe based on an array of indexes
-	 * @param array of indexes
+	 * Returns a row subsection of a dataframe based on an array of indexes.
+	 * 
+	 * @param indexes the array of row indexes
 	 * @return the new dataframe based on the array of indexes
 	 * @throws java.lang.IllegalArgumentException if one of the indexes is invalid
+	 * @since 0.4.0
 	 */
-	public Dataframe selectRows(int[] index) {
+	public Dataframe selectRows(int[] indexes) {
 		int nbCol = this.columns.size();
 		Dataframe newDataframe = new Dataframe();
 		Object[] row = new Object[nbCol];
 		for (int i=0; i<nbCol; i++) {
 			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
 		}
-		for(Integer i : index) {
+		for(Integer i : indexes) {
 			for(int j=0; j<nbCol; j++) {
 				row[j] = this.get(i, j);
 			}
@@ -352,28 +353,32 @@ public class Dataframe {
 	}
 
 	/**
-	 * Returns a column subsection of a dataframe based on an array of labels
-	 * @param array of labels
+	 * Returns a column subsection of a dataframe based on an array of labels.
+	 * 
+	 * @param labels the array of column labels
 	 * @return the new dataframe based on the array of labels
 	 * @throws java.lang.IllegalArgumentException if one of the labels is invalid
+	 * @since 0.4.0
 	 */
-	public Dataframe selectColumns(String[] label) throws IllegalArgumentException {
-		Dataframe newDataframe = this.extractColumns(label);
+	public Dataframe selectColumns(String[] labels) throws IllegalArgumentException {
+		Dataframe newDataframe = this.extractColumns(labels);
 		int[] index = range(0, this.rowCount);
 		newDataframe = this.extractRows(index, newDataframe);
 		return newDataframe;
 	}
 
 	/**
-	 * Returns a subsection of a dataframe based of a list of indexes and labels
-	 * @param array of indexes
-	 * @param array of labels
+	 * Returns a subsection of a dataframe based of a list of indexes and labels.
+	 * 
+	 * @param indexes the array of row indexes
+	 * @param labels the array of labels
 	 * @return the new dataframe based on the array of indexes and the array of labels
 	 * @throws java.lang.IllegalArgumentException if one of the indexes or labels is invalid
+	 * @since 0.4.0
 	 */
-	public Dataframe crossSelect(int[] index, String[] label) throws IllegalArgumentException {
-		Dataframe newDataframe = this.extractColumns(label);
-		newDataframe = this.extractRows(index, newDataframe);
+	public Dataframe crossSelect(int[] indexes, String[] labels) throws IllegalArgumentException {
+		Dataframe newDataframe = this.extractColumns(labels);
+		newDataframe = this.extractRows(indexes, newDataframe);
 		return newDataframe;
 	}
 
@@ -403,7 +408,9 @@ public class Dataframe {
 		columns.add(new Column(type, label));
 	}
 
-	// Get index of first column labeled by label or -1 if label cannot be found
+	/*
+	 * Get index of first column labeled by label or -1 if label cannot be found.
+	 */
 	private int labelToIndex(String label) {
 		for (int i=0; i<columns.size(); i++) {
 			if (columns.get(i).getLabel().equals(label)) {

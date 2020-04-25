@@ -30,3 +30,7 @@ bin
 
 # POM versions backup
 pom.xml.versionsBackup
+
+# Eclipse project files
+.project
+.classpath

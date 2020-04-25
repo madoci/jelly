@@ -111,16 +111,16 @@ public class DataframeTest {
 	}
 	
 	@Test
-	public void testAddLine() throws Exception {
+	public void testAddRow() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		
 		int year = 2020;
 		String make = "Peugeot";
 		String model = "205";
 		
-		Object[] line = { year, make, model };
+		Object[] row = { year, make, model };
 		
-		data.addRow(line);
+		data.addRow(row);
 		
 		assertEquals(year, (int) data.get(4, 0));
 		assertEquals(make, (String) data.get(4, 1));

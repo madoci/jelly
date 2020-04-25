@@ -73,7 +73,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
 	
-	// Returns a string of labels and rows from start to end included of the specified dataframe
+	/*
+	 * Returns a string of labels and rows from start to end included of the specified dataframe.
+	 */
 	private String dataframeToString(Dataframe dataframe, int start, int end) {
 		// Ensure we don't have indexes out of bounds
 		if (start < 0) {
@@ -97,7 +99,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return result;
 	}
 	
-	// Returns an array of all columns width from the specified dataframe
+	/*
+	 * Returns an array of all columns width from the specified dataframe.
+	 */
 	private int[] columnsWidth(Dataframe dataframe, int start, int end) {
 		int columnsWidth[] = new int[dataframe.columnCount()];
 		
@@ -115,7 +119,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return columnsWidth;
 	}
 	
-	// Returns the max width of a column between row start and end
+	/*
+	 * Returns the max width of a column between row start and end.
+	 */
 	private int maxWidth(Dataframe dataframe, int column, int start, int end) {
 		int width = 0;
 		
@@ -136,7 +142,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return width;
 	}
 	
-	// Returns a string of all labels of the specified dataframe
+	/*
+	 * Returns a string of all labels of the specified dataframe.
+	 */
 	private String labelsToString(Dataframe dataframe, int[] columnsWidth) {
 		// Any line begins with a separator
 		String labels = separator;
@@ -154,7 +162,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return labels;
 	}
 	
-	// Returns a string of the index-th row in the specified dataframe
+	/*
+	 * Returns a string of the index-th row in the specified dataframe.
+	 */
 	private String rowToString(Dataframe dataframe, int[] columnsWidth, int index) {
 		// Any line begins with a separator
 		String line = separator;
@@ -170,7 +180,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return line;
 	}
 	
-	// Returns a string representation of an object with padding according to the type
+	/*
+	 * Returns a string representation of an object with padding according to the type.
+	 */
 	private String objectToString(Object object, Class<?> type, int size) {
 		String s = new String();
 		
@@ -188,7 +200,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return s;
 	}
 	
-	// Returns a string of length size with spaces to the left of s
+	/*
+	 * Returns a string of length size with spaces to the left of s.
+	 */
 	private String leftPadding(String s, int size) {
 		String result = s;
 		for (int i=0; i<size-s.length(); i++) {
@@ -197,7 +211,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return result;
 	}
 	
-	// Returns a string of length size with spaces to the right of s
+	/*
+	 * Returns a string of length size with spaces to the right of s.
+	 */
 	private String rightPadding(String s, int size) {
 		String result = s;
 		for (int i=0; i<size-s.length(); i++) {

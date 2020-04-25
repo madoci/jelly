@@ -213,4 +213,24 @@ public class DataframeTest {
 		new Dataframe(labels, col1, col2, col3);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalAddRow() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+		Integer col3[] = { 46, 28, 61 };
+		Double col4[] = { 1.05, -2.7, 32.45 };
+		
+		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
+		
+		String a = "D";
+		int b = 2;
+		int c = 40;
+		double d = 12.4;
+		
+		Object row[] = { a, b, c, d };
+		
+		data.addRow(row);
+	}
+	
 }

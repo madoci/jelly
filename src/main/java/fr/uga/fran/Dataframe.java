@@ -38,8 +38,12 @@ public class Dataframe {
 		/*
 		 * Add an element of data type at the end of this column.
 		 */
-		public void add(Object element) {
-			list.add(element);
+		public void add(Object element) throws IllegalArgumentException {
+			if (element == null || type.isInstance(element)) {
+				list.add(element);
+			} else {
+				throw new IllegalArgumentException("Element is of " + element.getClass() + " instead of " + type);
+			}
 		}
 
 		/*
@@ -68,7 +72,7 @@ public class Dataframe {
 	 * @param labels the array of labels, in the same order as the columns
 	 * @param data variable amount of arrays each containing the content of a column
 	 */
-	public Dataframe(String labels[], Object[] ...data) {
+	public Dataframe(String labels[], Object[] ...data) throws IllegalArgumentException {
 		this();
 
 		int numRows = 0;

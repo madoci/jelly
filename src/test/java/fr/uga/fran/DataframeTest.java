@@ -199,4 +199,18 @@ public class DataframeTest {
 		assertEquals(viewer.view(data), data.toString());
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalArrayConstructor() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+		
+		int a = 46;
+		int b = 28;
+		double c = 61.5;
+		Object col3[] = { a, b, c };
+		
+		new Dataframe(labels, col1, col2, col3);
+	}
+	
 }

@@ -114,7 +114,7 @@ public class ArrayStatistics {
 		} else if (Double.class.isAssignableFrom(type)) {
 			return new DoubleOperators();
 		} else {
-			throw new IllegalArgumentException("cannot perform operations on element of"+type);
+			throw new IllegalArgumentException("cannot perform operations on element of "+type);
 		}
 	}
 	

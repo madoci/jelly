@@ -130,5 +130,35 @@ public class ArrayStatisticsTest {
 		Double median4 = (Double) ArrayStatistics.median(array4);
 		assertEquals(-287.3, (double) median4, 0.00001);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testEmptyArray() {
+		Integer array[] = new Integer[0];
+		ArrayStatistics.min(array);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalArray() {
+		String array[] = { "A", "B", "C" };
+		ArrayStatistics.max(array);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testNotSupported() {
+		@SuppressWarnings("serial")
+		final class NotSupported extends Number {
+			@Override
+			public double doubleValue() { return 0; }
+			@Override
+			public float floatValue() { return 0; }
+			@Override
+			public int intValue() { return 0; }
+			@Override
+			public long longValue() { return 0; }
+		}
+		
+		NotSupported array[] = { new NotSupported(), new NotSupported() };
+		ArrayStatistics.median(array);
+	}
 
 }

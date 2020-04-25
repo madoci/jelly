@@ -226,7 +226,7 @@ public class Dataframe {
 	 * @param row the array of row data to add
 	 * @since 0.3.0
 	 */
-	public void addRow(Object row[]) {
+	public void addRow(Object row[]) throws IllegalArgumentException {
 		for (int i=0; i<columns.size(); i++) {
 			if (i < row.length) {
 				columns.get(i).add(row[i]);

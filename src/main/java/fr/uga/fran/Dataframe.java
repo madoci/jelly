@@ -208,6 +208,12 @@ public class Dataframe {
 	}
 	
 
+	/**
+	 * Returns a row subsection of a dataframe based on an array of indexes
+	 * @param array of indexes
+	 * @return the new dataframe based on the array of indexes
+	 * @throws IllegalArgumentException if one of the indexes is invalid
+	 */
 	public Dataframe selectRows(int[] index) {		
 		int nbCol = this.columns.size();
 		Dataframe newDataframe = new Dataframe();
@@ -224,6 +230,12 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
+	/**
+	 * Returns a column subsection of a dataframe based on an array of labels
+	 * @param array of labels
+	 * @return the new dataframe based on the array of labels
+	 * @throws IllegalArgumentException if one of the labels is invalid
+	 */
 	public Dataframe selectColumns(String[] label) throws IllegalArgumentException {
 		Dataframe newDataframe = this.extractColumns(label);
 		int[] index = IntStream.rangeClosed(0, this.rowCount-1).toArray();
@@ -231,7 +243,14 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
-	public Dataframe crossSelect(int[] index, String[] label) {
+	/**
+	 * Returns a subsection of a dataframe based of a list of indexes and labels
+	 * @param array of indexes
+	 * @param array of labels
+	 * @return the new dataframe based on the array of indexes and the array of labels
+	 * @throws IllegalArgumentException if one of the indexes or labels is invalid
+	 */
+	public Dataframe crossSelect(int[] index, String[] label) throws IllegalArgumentException {
 		Dataframe newDataframe = this.extractColumns(label);
 		newDataframe = this.extractRows(index, newDataframe);
 		return newDataframe;

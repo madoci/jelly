@@ -4,7 +4,7 @@
   <groupId>fr.uga.fran</groupId>
   <artifactId>jelly</artifactId>
   <packaging>jar</packaging>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.4-SNAPSHOT</version>
   <name>Jelly</name>
   <url>http://maven.apache.org</url>
 

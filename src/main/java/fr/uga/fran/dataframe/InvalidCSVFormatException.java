@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 /**
  * Exception thrown when trying to read an invalid CSV file.
@@ -6,8 +6,8 @@ package fr.uga.fran;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.2.0
- * @see fr.uga.fran.CSVParser
- * @see fr.uga.fran.Dataframe
+ * @see fr.uga.fran.dataframe.CSVParser
+ * @see fr.uga.fran.dataframe.Dataframe
  */
 public class InvalidCSVFormatException extends Exception {
 

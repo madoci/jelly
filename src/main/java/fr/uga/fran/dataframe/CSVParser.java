@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -122,7 +122,7 @@ public class CSVParser {
 	 * First call of this method will parse the first line of the file.
 	 *
 	 * @return an array of all data read on the current line, or null if
-	 * @throws fr.uga.fran.InvalidCSVFormatException if the file misses a closing double quote on a line
+	 * @throws fr.uga.fran.dataframe.InvalidCSVFormatException if the file misses a closing double quote on a line
 	 */	
 	public Object[] readLine() throws InvalidCSVFormatException {
 		// If the scanner is at the end of the file, return null

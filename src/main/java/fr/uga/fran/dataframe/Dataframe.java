@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.List;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.1.0
- * @see fr.uga.fran.DataframeViewer
- * @see fr.uga.fran.TabularDataframeViewer
+ * @see fr.uga.fran.dataframe.DataframeViewer
+ * @see fr.uga.fran.dataframe.TabularDataframeViewer
  */
 public class Dataframe {
 	/*
@@ -117,7 +117,7 @@ public class Dataframe {
 	 *
 	 * @param pathname pathname of the CSV file to use
 	 * @throws java.io.FileNotFoundException if the file at pathname is not found
-	 * @throws fr.uga.fran.InvalidCSVFormatException if the file does not follow CSV format
+	 * @throws fr.uga.fran.dataframe.InvalidCSVFormatException if the file does not follow CSV format
 	 * @since 0.2.0
 	 */
 	public Dataframe(String pathname) throws FileNotFoundException, InvalidCSVFormatException {

@@ -1,9 +1,13 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import fr.uga.fran.dataframe.Dataframe;
+import fr.uga.fran.dataframe.InvalidCSVFormatException;
+import fr.uga.fran.dataframe.TabularDataframeViewer;
 
 
 public class DataframeTest {

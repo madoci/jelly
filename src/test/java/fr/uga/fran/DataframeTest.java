@@ -181,6 +181,21 @@ public class DataframeTest {
 		assertEquals("MUST SELL! air, moon roof, loaded", (String) newData.get(3, 1));
 	}
 	
+	@Test
+	public void testCrossSelect() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		int[] i = {2, 3};
+		String[] j = {"Constructeur", "Description"};
+		Dataframe newData = data.crossSelect(i, j);
+		assertEquals("Chevy", (String) newData.get(0,0));
+		assertNull(newData.get(0, 1));
+		
+		assertEquals("Jeep", (String) newData.get(1, 0));
+		assertEquals("MUST SELL! air, moon roof, loaded", (String) newData.get(1, 1));
+	}
+	
+	@Test
 	public void testAccessByLabel() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		

@@ -3,6 +3,7 @@ package fr.uga.fran;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * A two-dimensional table with heterogeneous data types.
@@ -207,7 +208,7 @@ public class Dataframe {
 	}
 	
 
-	public Dataframe selectRows(int[] index) {
+	public Dataframe selectRows(int[] index) {		
 		int nbCol = this.columns.size();
 		Dataframe newDataframe = new Dataframe();
 		Object[] row = new Object[nbCol];
@@ -224,21 +225,15 @@ public class Dataframe {
 	}
 	
 	public Dataframe selectColumns(String[] label) throws IllegalArgumentException {
-		Dataframe newDataframe = new Dataframe();
-		int index;
-		int cpt=0;
-		for(String s : label) {
-			index = this.labelToIndexStrict(s);
-			newDataframe.addColumn(this.columns.get(index).getType(), this.columns.get(index).getLabel());
-			cpt++;
-		}
-		Object[] row = new Object[cpt];
-		for(int i=0; i<this.rowCount; i++) {
-			for(int j=0; j<cpt; j++) {
-				row[j] = get(i, labelToIndex(newDataframe.getLabel(j)));
-			}
-			newDataframe.addRow(row);
-		}
+		Dataframe newDataframe = this.extractColumns(label);
+		int[] index = IntStream.rangeClosed(0, this.rowCount-1).toArray();
+		newDataframe = this.extractRows(index, newDataframe);
+		return newDataframe;
+	}
+	
+	public Dataframe crossSelect(int[] index, String[] label) {
+		Dataframe newDataframe = this.extractColumns(label);
+		newDataframe = this.extractRows(index, newDataframe);
 		return newDataframe;
 	}
 	
@@ -294,5 +289,26 @@ public class Dataframe {
 			throw new IllegalArgumentException("Label " + label + " does not belong to this dataframe");
 		}
 		return index;
+	}
+	
+	private Dataframe extractColumns(String[] label) throws IllegalArgumentException {
+		int index;
+		Dataframe newDataframe = new Dataframe();
+		for(String s : label) {
+			index = this.labelToIndexStrict(s);
+			newDataframe.addColumn(this.columns.get(index).getType(), this.columns.get(index).getLabel());
+		}
+		return newDataframe;
+	}
+	
+	private Dataframe extractRows(int[] index, Dataframe data) throws IllegalArgumentException {
+		Object[] row = new Object[data.columns.size()];
+		for(int i : index) {
+			for(int j=0; j<data.columns.size(); j++) {
+				row[j] = get(i, labelToIndex(data.getLabel(j)));
+			}
+			data.addRow(row);
+		}
+		return data;
 	}
 }

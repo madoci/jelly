@@ -74,7 +74,7 @@ public class Dataframe {
 	 *
 	 * @param labels the array of labels, in the same order as the columns
 	 * @param data variable amount of arrays each containing the content of a column
-	 * @throws IllegalArgumentException if a column array is composed of objects of different types
+	 * @throws java.lang.IllegalArgumentException if a column array is composed of objects of different types
 	 */
 	public Dataframe(String labels[], Object[] ...data) throws IllegalArgumentException {
 		this();
@@ -222,8 +222,11 @@ public class Dataframe {
 
 	/**
 	 * Add a row of data to this dataframe.
+	 * Elements in the specified row should be in the same order as the columns in this dataframe,
+	 * and of the same type as the data type of their corresponding column.
 	 *
 	 * @param row the array of row data to add
+	 * @throws java.lang.IllegalArgumentException if an element in the row is not of the appropriate type
 	 * @since 0.3.0
 	 */
 	public void addRow(Object row[]) throws IllegalArgumentException {

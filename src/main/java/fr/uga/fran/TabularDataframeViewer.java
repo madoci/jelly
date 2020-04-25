@@ -190,8 +190,8 @@ public class TabularDataframeViewer implements DataframeViewer {
 			s = object.toString();
 		}
 		
-		// Numbers (int and double) are aligned to the right, any other type is aligned to the left
-		if (type == Integer.class || type == Double.class) {
+		// Numbers are aligned to the right, any other type is aligned to the left
+		if (object instanceof Number) {
 			s = leftPadding(s, size);
 		} else {
 			s = rightPadding(s, size);

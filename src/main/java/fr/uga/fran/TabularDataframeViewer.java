@@ -73,7 +73,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
 	
-	// Returns a string of labels and rows from start to end included of the specified dataframe
+	/*
+	 * Returns a string of labels and rows from start to end included of the specified dataframe.
+	 */
 	private String dataframeToString(Dataframe dataframe, int start, int end) {
 		// Ensure we don't have indexes out of bounds
 		if (start < 0) {
@@ -97,34 +99,52 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return result;
 	}
 	
-	// Returns an array of all columns width from the specified dataframe
+	/*
+	 * Returns an array of all columns width from the specified dataframe.
+	 */
 	private int[] columnsWidth(Dataframe dataframe, int start, int end) {
 		int columnsWidth[] = new int[dataframe.columnCount()];
 		
 		// For each column
 		for (int i=0; i<dataframe.columnCount(); i++) {
-			// Initialize column width with the label's width
-			columnsWidth[i] = dataframe.getLabel(i).length();
+			// Retrieve max width of column i
+			columnsWidth[i] = maxWidth(dataframe, i, start, end);
 			
-			// For each row, search the maximum width for column i
-			for (int j=start; j<=end; j++) {
-				Object object = dataframe.get(j, i);
-				
-				if (object != null) {
-					String word = object.toString();
-					
-					// Update maximum width
-					if (word.length() > columnsWidth[i]) {
-						columnsWidth[i] = word.length();
-					}
-				}
+			// Real max width is max between max width and label width
+			if (dataframe.getLabel(i).length() > columnsWidth[i]) {
+				columnsWidth[i] = dataframe.getLabel(i).length();
 			}
 		}
 		
 		return columnsWidth;
 	}
 	
-	// Returns a string of all labels of the specified dataframe
+	/*
+	 * Returns the max width of a column between row start and end.
+	 */
+	private int maxWidth(Dataframe dataframe, int column, int start, int end) {
+		int width = 0;
+		
+		// For each row, search the maximum width for column i
+		for (int i=start; i<=end; i++) {
+			Object object = dataframe.get(i, column);
+			
+			if (object != null) {
+				String word = object.toString();
+				
+				// Update maximum width
+				if (word.length() > width) {
+					width = word.length();
+				}
+			}
+		}
+		
+		return width;
+	}
+	
+	/*
+	 * Returns a string of all labels of the specified dataframe.
+	 */
 	private String labelsToString(Dataframe dataframe, int[] columnsWidth) {
 		// Any line begins with a separator
 		String labels = separator;
@@ -142,37 +162,47 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return labels;
 	}
 	
-	// Returns a string of the index-th row in the specified dataframe
+	/*
+	 * Returns a string of the index-th row in the specified dataframe.
+	 */
 	private String rowToString(Dataframe dataframe, int[] columnsWidth, int index) {
 		// Any line begins with a separator
 		String line = separator;
 		
 		// For each column
 		for (int i=0; i<dataframe.columnCount(); i++) {
-			String data = new String();
+			// Get the string representation of the element with padding
+			String data = objectToString(dataframe.get(index, i), dataframe.getType(i), columnsWidth[i]);
 			
-			// Get the object and convert it into a string
-			Object obj = dataframe.get(index, i);
-			if (obj != null) {
-				data += obj.toString();
-			}
-			
-			// Padding to align columns
-			// Numbers (int and double) are aligned to the right, any other type is aligned to the left
-			if (dataframe.getType(i) == Integer.class || dataframe.getType(i) == Double.class) {
-				data = leftPadding(data, columnsWidth[i]);
-			} else {
-				data = rightPadding(data, columnsWidth[i]);
-			}
-			
-			// Add a separator between columns
 			line += data + separator;
 		}
 		
 		return line;
 	}
 	
-	// Returns a string of length size with spaces to the left of s
+	/*
+	 * Returns a string representation of an object with padding according to the type.
+	 */
+	private String objectToString(Object object, Class<?> type, int size) {
+		String s = new String();
+		
+		if (object != null) {
+			s = object.toString();
+		}
+		
+		// Numbers (int and double) are aligned to the right, any other type is aligned to the left
+		if (type == Integer.class || type == Double.class) {
+			s = leftPadding(s, size);
+		} else {
+			s = rightPadding(s, size);
+		}
+		
+		return s;
+	}
+	
+	/*
+	 * Returns a string of length size with spaces to the left of s.
+	 */
 	private String leftPadding(String s, int size) {
 		String result = s;
 		for (int i=0; i<size-s.length(); i++) {
@@ -181,7 +211,9 @@ public class TabularDataframeViewer implements DataframeViewer {
 		return result;
 	}
 	
-	// Returns a string of length size with spaces to the right of s
+	/*
+	 * Returns a string of length size with spaces to the right of s.
+	 */
 	private String rightPadding(String s, int size) {
 		String result = s;
 		for (int i=0; i<size-s.length(); i++) {

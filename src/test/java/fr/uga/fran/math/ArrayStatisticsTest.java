@@ -160,5 +160,10 @@ public class ArrayStatisticsTest {
 		NotSupported array[] = { new NotSupported(), new NotSupported() };
 		ArrayStatistics.median(array);
 	}
+	
+	@Test
+	public void testInstance() {
+		assertNotNull(new ArrayStatistics());
+	}
 
 }

@@ -5,10 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import fr.uga.fran.dataframe.Dataframe;
-import fr.uga.fran.dataframe.InvalidCSVFormatException;
-import fr.uga.fran.dataframe.TabularDataframeViewer;
-
 
 public class DataframeTest {
 	
@@ -235,6 +231,46 @@ public class DataframeTest {
 		Object row[] = { a, b, c, d };
 		
 		data.addRow(row);
+	}
+	
+	@Test
+	public void testStatsByIndex() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals(3, data.argmin(0));
+		assertEquals(2, data.argmax(4));
+		assertEquals(3000.0, (double) data.min(4), 0.0001);
+		assertEquals(1999, (int) data.max(0));
+		assertEquals(17699.0, (double) data.sum(4), 0.0001);
+		assertEquals(1997, (int) data.mean(0));
+		assertEquals(4849.5, (double) data.median(4), 0.0001);
+	}
+	
+	@Test
+	public void testStatsByLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		assertEquals(3, data.argmin("Année"));
+		assertEquals(2, data.argmax("Prix"));
+		assertEquals(3000.0, (double) data.min("Prix"), 0.0001);
+		assertEquals(1999, (int) data.max("Année"));
+		assertEquals(17699.0, (double) data.sum("Prix"), 0.0001);
+		assertEquals(1997, (int) data.mean("Année"));
+		assertEquals(4849.5, (double) data.median("Prix"), 0.0001);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalStatsByIndex() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data.min(1);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalStatsByLabel() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data.sum("Modèle");
 	}
 	
 }

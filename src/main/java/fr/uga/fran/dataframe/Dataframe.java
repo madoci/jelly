@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.uga.fran.math.ArrayStatistics;
+
 /**
  * A two-dimensional table with heterogeneous data types.
  * Each column is labeled with a name and contains data of a single type.
@@ -63,6 +65,11 @@ public class Dataframe {
 		 * Returns the label of this column.
 		 */
 		public String getLabel() { return label; }
+		
+		/*
+		 * Returns an array of the objects inside this column.
+		 */
+		public Object[] getArray() { return list.toArray(); }
 	}
 
 	private List<Column> columns;
@@ -327,6 +334,62 @@ public class Dataframe {
 	public String tail(int num) {
 		return viewer.tail(this, num);
 	}
+	
+	public int argmin(int column) throws IllegalArgumentException {
+		return ArrayStatistics.argmin(columns.get(column).getArray());
+	}
+	
+	public int argmin(String label) throws IllegalArgumentException {
+		return ArrayStatistics.argmin(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public int argmax(int column) throws IllegalArgumentException {
+		return ArrayStatistics.argmax(columns.get(column).getArray());
+	}
+	
+	public int argmax(String label) throws IllegalArgumentException {
+		return ArrayStatistics.argmax(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public Object min(int column) throws IllegalArgumentException {
+		return ArrayStatistics.min(columns.get(column).getArray());
+	}
+	
+	public Object min(String label) throws IllegalArgumentException {
+		return ArrayStatistics.min(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public Object max(int column) throws IllegalArgumentException {
+		return ArrayStatistics.max(columns.get(column).getArray());
+	}
+	
+	public Object max(String label) throws IllegalArgumentException {
+		return ArrayStatistics.max(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public Object sum(int column) throws IllegalArgumentException {
+		return ArrayStatistics.sum(columns.get(column).getArray());
+	}
+	
+	public Object sum(String label) throws IllegalArgumentException {
+		return ArrayStatistics.sum(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public Object mean(int column) throws IllegalArgumentException {
+		return ArrayStatistics.mean(columns.get(column).getArray());
+	}
+	
+	public Object mean(String label) throws IllegalArgumentException {
+		return ArrayStatistics.mean(columns.get(labelToIndexStrict(label)).getArray());
+	}
+	
+	public Object median(int column) throws IllegalArgumentException {
+		return ArrayStatistics.median(columns.get(column).getArray());
+	}
+	
+	public Object median(String label) throws IllegalArgumentException {
+		return ArrayStatistics.median(columns.get(labelToIndexStrict(label)).getArray());
+	}	
 
 	@Override
 	public String toString() {

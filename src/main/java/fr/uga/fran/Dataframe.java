@@ -381,11 +381,12 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Returns a new dataframe with only the rows that have a value equals to a specified value.
+	 * Returns a new dataframe with only the rows that have a value equals to the specified value.
 	 * 
 	 * @param label the label of the column to compare
 	 * @param val the value to compare
 	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
 	 */
 	public Dataframe selectEquals(String label, Object val) {
 		Dataframe newDataframe = this.extractColumns();
@@ -398,11 +399,12 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Returns a new dataframe with only the rows that have a value different to a specified value.
+	 * Returns a new dataframe with only the rows that have a value different to the specified value.
 	 * 
 	 * @param label the label of the column to compare
 	 * @param val the value to compare
 	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
 	 */
 	public Dataframe selectNotEquals(String label, Object val) {
 		Dataframe newDataframe = this.extractColumns();
@@ -415,15 +417,16 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Returns a new dataframe with only the rows that have a value greater than a specified value.
+	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
 	 * 
 	 * @param label the label of the column to compare
 	 * @param val the value to compare
 	 * @param strict a boolean, if true then the comparison is strict.
 	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Dataframe selectGreaterThan(String label, Comparable<T> val, Boolean strict) {
+	public <T> Dataframe selectGreaterThan(String label, Comparable<T> val, boolean strict) {
 		Dataframe newDataframe = this.extractColumns();
 		for(int i=0; i<this.rowCount; i++) {
 			if(strict) {
@@ -441,15 +444,16 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Returns a new dataframe with only the rows that have a value greater than a specified value.
+	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
 	 * 
 	 * @param label the label of the column to compare
 	 * @param val the value to compare
 	 * @param strict a boolean, if true then the comparison is strict.
 	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Dataframe selectLessThan(String label, Comparable<T> val, Boolean strict) {
+	public <T> Dataframe selectLessThan(String label, Comparable<T> val, boolean strict) {
 		Dataframe newDataframe = this.extractColumns();
 		for(int i=0; i<this.rowCount; i++) {
 			if(strict) {
@@ -471,6 +475,7 @@ public class Dataframe {
 	 * 
 	 * @param index the index of the row
 	 * @return an array of the data of the specified row
+	 * @since 0.4.0
 	 */
 	public Object[] getRow(int index) {
 		Object[] row = new Object[this.columns.size()];
@@ -529,7 +534,9 @@ public class Dataframe {
 		return index;
 	}
 
-	// Extracts the columns of a dataframe based of an array of labels
+	/*
+	 * Extracts the columns of a dataframe based of an array of labels.
+	 */
 	private Dataframe extractColumns(String[] label) throws IllegalArgumentException {
 		int index;
 		Dataframe newDataframe = new Dataframe();
@@ -540,7 +547,9 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
-	// Extracts all the columns of a dataframe
+	/*
+	 * Extracts all the columns of a dataframe
+	 */
 	private Dataframe extractColumns() {
 		Dataframe newDataframe = new Dataframe();
 		for (int i=0; i<this.columns.size(); i++) {
@@ -549,7 +558,9 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
-	// Extracts the rows of a dataframe based of an array of labels
+	/*
+	 * Extracts the rows of a dataframe based of an array of labels
+	 */
 	private Dataframe extractRows(int[] index, Dataframe data) throws IllegalArgumentException {
 		Object[] row = new Object[data.columns.size()];
 		for(int i : index) {
@@ -561,7 +572,9 @@ public class Dataframe {
 		return data;
 	}
 
-	// Returns an array of int ranging from begin to end
+	/*
+	 * Returns an array of int ranging from begin to end
+	 */
 	private int[] range(int begin, int end) {
 		int[] array = new int[end];
 		for(int i=begin; i<end; i++) {

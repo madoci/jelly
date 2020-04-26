@@ -200,13 +200,18 @@ public class DataframeSelection {
 	 */
 	private int[] columnIndexes(String[] labels) {
 		int indexes[] = new int[labels.length];
-		int count = 0;
 		
-		for (int i=0; i<dataframe.columnCount() && count<labels.length; i++) {
-			if (labels[count].equals(dataframe.getLabel(i))) {
-				indexes[count] = i;
-				count++;
+		for (int i=0; i<labels.length; i++) {
+			int j = 0;
+			while (j < dataframe.columnCount() && !labels[i].equals(dataframe.getLabel(j))) {
+				j++;
 			}
+			
+			if (j == dataframe.columnCount()) {
+				throw new IllegalArgumentException("");
+			}
+			
+			indexes[i] = j;
 		}
 		
 		return indexes;
@@ -248,8 +253,6 @@ public class DataframeSelection {
 	
 	private boolean isComparisonValid(int compare, Comparison sign) {
 		switch (sign) {
-		case EQUAL:
-			return (compare == 0);
 		case NOTEQUAL:
 			return (compare != 0);
 		case LESSTHAN:
@@ -261,7 +264,7 @@ public class DataframeSelection {
 		case GREATEREQUAL:
 			return (compare <= 0);
 		default:
-			return false;
+			return (compare == 0);
 		}
 	}
 	

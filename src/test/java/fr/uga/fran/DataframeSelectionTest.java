@@ -96,6 +96,19 @@ public class DataframeSelectionTest {
 	}
 	
 	@Test
+	public void testSelectionOrder() throws Exception {
+		String[] labels = {"Constructeur", "Description", "Année", "Prix", "Modèle"};
+		int[] rows = { 0 };
+		Dataframe newData = selection.cross(rows, labels);
+		
+		assertEquals("Ford", newData.get(0, 0));
+		assertEquals("ac, abs, moon", newData.get(0, 1));
+		assertEquals(1997, (int) newData.get(0, 2));
+		assertEquals(3000.0, (double) newData.get(0, 3), 0.0001);
+		assertEquals("E350", newData.get(0, 4));
+	}
+	
+	@Test
 	public void testEqual() throws Exception {		
 		Dataframe newData = selection.equal("Constructeur", "Chevy");
 		

@@ -6,8 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DoubleOperatorsTest {
+	
 	private DoubleOperators operators;
 	private Double a, b, c;
+	private final double epsilon = 0.00001;
 	
 	@Before
 	public void setUp() {
@@ -20,49 +22,49 @@ public class DoubleOperatorsTest {
 	@Test
 	public void testAdd() {
 		Double ab = (Double) operators.add(a, b);
-		assertEquals((double) (a+b), (double) ab, 0.00001);
+		assertEquals((double) (a+b), (double) ab, epsilon);
 
 		Double ac = (Double) operators.add(a, c);
-		assertEquals((double) (a+c), (double) ac, 0.00001);
+		assertEquals((double) (a+c), (double) ac, epsilon);
 
 		Double bc = (Double) operators.add(b, c);
-		assertEquals((double) (b+c), (double) bc, 0.00001);
+		assertEquals((double) (b+c), (double) bc, epsilon);
 	}
 
 	@Test
 	public void testSubstract() {
 		Double ab = (Double) operators.substract(a, b);
-		assertEquals((double) (a-b), (double) ab, 0.00001);
+		assertEquals((double) (a-b), (double) ab, epsilon);
 
 		Double ac = (Double) operators.substract(a, c);
-		assertEquals((double) (a-c), (double) ac, 0.00001);
+		assertEquals((double) (a-c), (double) ac, epsilon);
 
 		Double bc = (Double) operators.substract(b, c);
-		assertEquals((double) (b-c), (double) bc, 0.00001);
+		assertEquals((double) (b-c), (double) bc, epsilon);
 	}
 
 	@Test
 	public void testMultiply() {
 		Double ab = (Double) operators.multiply(a, b);
-		assertEquals((double) (a*b), (double) ab, 0.00001);
+		assertEquals((double) (a*b), (double) ab, epsilon);
 
 		Double ac = (Double) operators.multiply(a, c);
-		assertEquals((double) (a*c), (double) ac, 0.00001);
+		assertEquals((double) (a*c), (double) ac, epsilon);
 
 		Double bc = (Double) operators.multiply(b, c);
-		assertEquals((double) (b*c), (double) bc, 0.00001);
+		assertEquals((double) (b*c), (double) bc, epsilon);
 	}
 
 	@Test
 	public void testDivide() {
 		Double ab = (Double) operators.divide(a, b);
-		assertEquals((double) (a/b), (double) ab, 0.00001);
+		assertEquals((double) (a/b), (double) ab, epsilon);
 
 		Double ac = (Double) operators.divide(a, c);
-		assertEquals((double) (a/c), (double) ac, 0.00001);
+		assertEquals((double) (a/c), (double) ac, epsilon);
 
 		Double bc = (Double) operators.divide(b, c);
-		assertEquals((double) (b/c), (double) bc, 0.00001);
+		assertEquals((double) (b/c), (double) bc, epsilon);
 	}
 
 	@Test

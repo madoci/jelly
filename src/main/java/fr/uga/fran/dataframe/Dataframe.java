@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.uga.fran.math.ArrayStatistics;
+import fr.uga.fran.math.NumberArrayStatistics;
 
 /**
  * A two-dimensional table with heterogeneous data types.
@@ -75,6 +76,7 @@ public class Dataframe {
 	private List<Column> columns;
 	private int rowCount;
 	private DataframeViewer viewer;
+	private ArrayStatistics statistics;
 
 	/**
 	 * Constructs a dataframe from an array of labels and arrays of columns.
@@ -335,60 +337,64 @@ public class Dataframe {
 		return viewer.tail(this, num);
 	}
 	
+	public void setStatistics(ArrayStatistics statistics) {
+		this.statistics = statistics;
+	}
+	
 	public int argmin(int column) throws IllegalArgumentException {
-		return ArrayStatistics.argmin(columns.get(column).getArray());
+		return statistics.argmin(columns.get(column).getArray());
 	}
 	
 	public int argmin(String label) throws IllegalArgumentException {
-		return ArrayStatistics.argmin(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.argmin(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public int argmax(int column) throws IllegalArgumentException {
-		return ArrayStatistics.argmax(columns.get(column).getArray());
+		return statistics.argmax(columns.get(column).getArray());
 	}
 	
 	public int argmax(String label) throws IllegalArgumentException {
-		return ArrayStatistics.argmax(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.argmax(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public Object min(int column) throws IllegalArgumentException {
-		return ArrayStatistics.min(columns.get(column).getArray());
+		return statistics.min(columns.get(column).getArray());
 	}
 	
 	public Object min(String label) throws IllegalArgumentException {
-		return ArrayStatistics.min(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.min(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public Object max(int column) throws IllegalArgumentException {
-		return ArrayStatistics.max(columns.get(column).getArray());
+		return statistics.max(columns.get(column).getArray());
 	}
 	
 	public Object max(String label) throws IllegalArgumentException {
-		return ArrayStatistics.max(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.max(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public Object sum(int column) throws IllegalArgumentException {
-		return ArrayStatistics.sum(columns.get(column).getArray());
+		return statistics.sum(columns.get(column).getArray());
 	}
 	
 	public Object sum(String label) throws IllegalArgumentException {
-		return ArrayStatistics.sum(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.sum(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public Object mean(int column) throws IllegalArgumentException {
-		return ArrayStatistics.mean(columns.get(column).getArray());
+		return statistics.mean(columns.get(column).getArray());
 	}
 	
 	public Object mean(String label) throws IllegalArgumentException {
-		return ArrayStatistics.mean(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.mean(columns.get(labelToIndexStrict(label)).getArray());
 	}
 	
 	public Object median(int column) throws IllegalArgumentException {
-		return ArrayStatistics.median(columns.get(column).getArray());
+		return statistics.median(columns.get(column).getArray());
 	}
 	
 	public Object median(String label) throws IllegalArgumentException {
-		return ArrayStatistics.median(columns.get(labelToIndexStrict(label)).getArray());
+		return statistics.median(columns.get(labelToIndexStrict(label)).getArray());
 	}	
 
 	@Override
@@ -408,6 +414,7 @@ public class Dataframe {
 		columns = new ArrayList<>();
 		rowCount = 0;
 		viewer = new TabularDataframeViewer();
+		statistics = new NumberArrayStatistics();
 	}
 
 	/*

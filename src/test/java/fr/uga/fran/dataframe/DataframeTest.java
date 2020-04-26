@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import fr.uga.fran.math.IntegerOperators;
+import fr.uga.fran.math.NumberArrayStatistics;
+
 
 public class DataframeTest {
 	
@@ -271,6 +274,18 @@ public class DataframeTest {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 		
 		data.sum("Modèle");
+	}
+	
+	@Test
+	public void testSetStatistics() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		NumberArrayStatistics stats = new NumberArrayStatistics();
+		data.setStatistics(stats);
+		stats.setOperators(Double.class, new IntegerOperators());
+		
+		Integer mean = (Integer) data.mean("Prix");
+		assertEquals(4424, (int) mean);
 	}
 	
 }

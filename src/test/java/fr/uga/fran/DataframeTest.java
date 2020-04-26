@@ -2,6 +2,7 @@ package fr.uga.fran;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
 
@@ -195,6 +196,24 @@ public class DataframeTest {
 		assertEquals("MUST SELL! air, moon roof, loaded", (String) newData.get(1, 1));
 	}
 
+	@Test
+	public void testSelectEquals() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data = data.selectEquals("Constructeur", (String) "Chevy");
+		assertEquals(1999, (int) data.get(0, 0));
+		assertEquals("Chevy", (String) data.get(0, 1));
+		assertEquals("Venture \"Extended Edition\"", (String) data.get(0,  2));
+		assertNull(data.get(0, 3));
+		assertEquals(4900.00, (double) data.get(0, 4), 0.005);
+		
+		assertEquals(1999, (int) data.get(1, 0));
+		assertEquals("Chevy", (String) data.get(1, 1));
+		assertEquals("Venture \"Extended Edition, Very Large\"", (String) data.get(1,  2));
+		assertNull(data.get(1, 3));
+		assertEquals(5000.00, (double) data.get(1, 4), 0.005);
+	}
+	
 	@Test
 	public void testAccessByLabel() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");

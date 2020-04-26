@@ -397,6 +397,13 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
+	/**
+	 * Returns a new dataframe with only the rows that have a value different to a specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @return a new dataframe made up of the right values
+	 */
 	public Dataframe selectNotEquals(String label, Object val) {
 		Dataframe newDataframe = this.extractColumns();
 		for (int i=0; i<this.rowCount; i++) {

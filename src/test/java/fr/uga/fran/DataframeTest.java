@@ -244,8 +244,8 @@ public class DataframeTest {
 		assertEquals(3000.0, (double) data.get(0, 4), 0.005);
 		assertEquals(4799.0, (double) data.get(1, 4), 0.005);
 		
-		data = data.selectGreaterThan("Constructeur", "Ford", true);
-		assertEquals("Jeep", (String) data.get(0,  1));
+		data = data.selectLessThan("Constructeur", "Jeep", true);
+		assertEquals("Ford", (String) data.get(0,  1));
 	}
 	
 	@Test

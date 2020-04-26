@@ -381,13 +381,15 @@ public class Dataframe {
 	}
 	
 	/**
+	 * Returns a new dataframe with only the rows that have a value equals to a specified value.
+	 * 
 	 * @param label the label of the column to compare
 	 * @param val the value to compare
 	 * @return a new dataframe made up of the right values
 	 */
 	public Dataframe selectEquals(String label, Object val) {
 		Dataframe newDataframe = this.extractColumns();
-		for (int i=0; i<rowCount; i++) {
+		for (int i=0; i<this.rowCount; i++) {
 			if(this.get(i, label).equals(val)) {
 				newDataframe.addRow(getRow(i));
 			}
@@ -395,7 +397,71 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
+	public Dataframe selectNotEquals(String label, Object val) {
+		Dataframe newDataframe = this.extractColumns();
+		for (int i=0; i<this.rowCount; i++) {
+			if(!this.get(i, label).equals(val)) {
+				newDataframe.addRow(getRow(i));
+			}
+		}
+		return newDataframe;
+	}
+	
 	/**
+	 * Returns a new dataframe with only the rows that have a value greater than a specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @param strict a boolean, if true then the comparison is strict.
+	 * @return a new dataframe made up of the right values
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Dataframe selectGreaterThan(String label, Comparable<T> val, Boolean strict) {
+		Dataframe newDataframe = this.extractColumns();
+		for(int i=0; i<this.rowCount; i++) {
+			if(strict) {
+				if(val.compareTo((T) get(i, label)) < 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+			else {
+				if(val.compareTo((T) get(i, label)) <= 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns a new dataframe with only the rows that have a value greater than a specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @param strict a boolean, if true then the comparison is strict.
+	 * @return a new dataframe made up of the right values
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Dataframe selectLessThan(String label, Comparable<T> val, Boolean strict) {
+		Dataframe newDataframe = this.extractColumns();
+		for(int i=0; i<this.rowCount; i++) {
+			if(strict) {
+				if(val.compareTo((T) get(i, label)) > 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+			else {
+				if(val.compareTo((T) get(i, label)) >= 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns the row of the specified index.
+	 * 
 	 * @param index the index of the row
 	 * @return an array of the data of the specified row
 	 */

@@ -215,6 +215,40 @@ public class DataframeTest {
 	}
 	
 	@Test
+	public void testSelectNotEquals() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data = data.selectNotEquals("Constructeur", (String) "Chevy");
+		assertEquals("Ford", (String) data.get(0, 1));
+		assertEquals("Jeep", (String) data.get(1, 1));
+	}
+	
+	@Test
+	public void testSelectGreaterThan() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data = data.selectGreaterThan("Prix", Double.valueOf(3000.00), true);
+		assertEquals(4900.0, (double) data.get(0, 4), 0.005);
+		assertEquals(5000.0, (double) data.get(1, 4), 0.005);
+		assertEquals(4799.0, (double) data.get(2, 4), 0.005);
+		
+		data = data.selectGreaterThan("Constructeur", "Ci", false);
+		assertEquals("Jeep", (String) data.get(0, 1));		
+	}
+	
+	@Test
+	public void testSelectLessThan() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		data = data.selectLessThan("Prix", Double.valueOf(4799.00), false);
+		assertEquals(3000.0, (double) data.get(0, 4), 0.005);
+		assertEquals(4799.0, (double) data.get(1, 4), 0.005);
+		
+		data = data.selectGreaterThan("Constructeur", "Ford", true);
+		assertEquals("Jeep", (String) data.get(0,  1));
+	}
+	
+	@Test
 	public void testAccessByLabel() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
 

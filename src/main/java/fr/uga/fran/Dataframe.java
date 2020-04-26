@@ -3,7 +3,6 @@ package fr.uga.fran;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * A two-dimensional table with heterogeneous data types.
@@ -214,15 +213,12 @@ public class Dataframe {
 	 * @return the new dataframe based on the array of indexes
 	 * @throws IllegalArgumentException if one of the indexes is invalid
 	 */
-	public Dataframe selectRows(int[] index) {		
-		int nbCol = this.columns.size();
+	public Dataframe selectRows(int[] index) {
 		Dataframe newDataframe = new Dataframe();
-		Object[] row = new Object[nbCol];
-		for (int i=0; i<nbCol; i++) {
-			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
-		}
+		Object[] row = new Object[this.columns.size()];
+		newDataframe = this.extractColumns();
 		for(Integer i : index) {
-			for(int j=0; j<nbCol; j++) {
+			for(int j=0; j<this.columns.size(); j++) {
 				row[j] = this.get(i, j);
 			}
 			newDataframe.addRow(row);
@@ -254,6 +250,28 @@ public class Dataframe {
 		Dataframe newDataframe = this.extractColumns(label);
 		newDataframe = this.extractRows(index, newDataframe);
 		return newDataframe;
+	}
+	
+	public Dataframe selectEquals(String label, Object val) {
+		Dataframe newDataframe = this.extractColumns();
+		for (int i=0; i<rowCount; i++) {
+			if(this.get(i, label).equals(val)) {
+				newDataframe.addRow(getRow(i));
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * @param index the index of the row
+	 * @return an array of the data of the specified row
+	 */
+	public Object[] getRow(int index) {
+		Object[] row = new Object[this.columns.size()];
+		for(int i=0; i<this.columns.size(); i++) {
+			row[i] = get(index, i);
+		}
+		return row;
 	}
 	
 	/**
@@ -310,6 +328,7 @@ public class Dataframe {
 		return index;
 	}
 	
+	// Extract the columns of a dataframe based of an array of labels
 	private Dataframe extractColumns(String[] label) throws IllegalArgumentException {
 		int index;
 		Dataframe newDataframe = new Dataframe();
@@ -320,6 +339,16 @@ public class Dataframe {
 		return newDataframe;
 	}
 	
+	// Extract all the columns of a dataframe
+	private Dataframe extractColumns() {
+		Dataframe newDataframe = new Dataframe();
+		for (int i=0; i<this.columns.size(); i++) {
+			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
+		}
+		return newDataframe;
+	}
+	
+	// Extract the rows of a dataframe based of an array of labels
 	private Dataframe extractRows(int[] index, Dataframe data) throws IllegalArgumentException {
 		Object[] row = new Object[data.columns.size()];
 		for(int i : index) {
@@ -331,9 +360,10 @@ public class Dataframe {
 		return data;
 	}
 	
+	// Returns an array of int ranging from begin to end
 	private int[] range(int begin, int end) {
 		int[] array = new int[end];
-		for(int i=0; i<end; i++) {
+		for(int i=begin; i<end; i++) {
 			array[i] = i;
 		}
 		return array;

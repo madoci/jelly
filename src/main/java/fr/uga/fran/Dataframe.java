@@ -53,12 +53,12 @@ public class Dataframe {
 		 * Returns the object located at the specified index.
 		 */
 		public Object get(int index) { return list.get(index); }
-		
+
 		/*
 		 * Returns the data type of this column.
 		 */
 		public Class<?> getType() { return type; }
-		
+
 		/*
 		 * Returns the label of this column.
 		 */
@@ -263,7 +263,7 @@ public class Dataframe {
 
 	/**
 	 * Set the viewer to be used by this dataframe.
-	 * 
+	 *
 	 * @param viewer viewer to be used by this dataframe
 	 * @since 0.3.0
 	 */
@@ -274,7 +274,7 @@ public class Dataframe {
 	/**
 	 * Returns a string representation of this entire dataframe.
 	 * Uses the viewer set (or the default one) to get the representation.
-	 * 
+	 *
 	 * @return a string representation of this entire dataframe
 	 * @since 0.3.0
 	 */
@@ -285,7 +285,7 @@ public class Dataframe {
 	/**
 	 * Returns a string representation of the first rows of this dataframe.
 	 * Uses the viewer set (or the default one) to get the representation.
-	 * 
+	 *
 	 * @return a string representation of the first rows of this dataframe
 	 * @since 0.3.0
 	 */
@@ -296,7 +296,7 @@ public class Dataframe {
 	/**
 	 * Returns a string representation of the first rows of this dataframe with the specified number of rows.
 	 * Uses the viewer set (or the default one) to get the representation.
-	 * 
+	 *
 	 * @param num the number of rows to display
 	 * @return a string representation of the first rows of this dataframe
 	 * @since 0.3.0
@@ -308,7 +308,7 @@ public class Dataframe {
 	/**
 	 * Returns a string representation of the last rows of this dataframe.
 	 * Uses the viewer set (or the default one) to get the representation.
-	 * 
+	 *
 	 * @return a string representation of the last rows of this dataframe
 	 * @since 0.3.0
 	 */
@@ -319,13 +319,170 @@ public class Dataframe {
 	/**
 	 * Returns a string representation of the last rows of this dataframe with the specified number of rows.
 	 * Uses the viewer set (or the default one) to get the representation.
-	 * 
+	 *
 	 * @param num the number of rows to display
 	 * @return a string representation of the last rows of this dataframe
 	 * @since 0.3.0
 	 */
 	public String tail(int num) {
 		return viewer.tail(this, num);
+	}
+
+	/**
+	 * Returns a row subsection of a dataframe based on an array of indexes.
+	 * 
+	 * @param indexes the array of row indexes
+	 * @return the new dataframe based on the array of indexes
+	 * @throws java.lang.IllegalArgumentException if one of the indexes is invalid
+	 * @since 0.4.0
+	 */
+	public Dataframe selectRows(int[] indexes) {
+		Object[] row = new Object[this.columns.size()];
+		Dataframe newDataframe = this.extractColumns();
+		
+		for(Integer i : indexes) {
+			for(int j=0; j<this.columns.size(); j++) {
+				row[j] = this.get(i, j);
+			}
+			newDataframe.addRow(row);
+		}
+		
+		return newDataframe;
+	}
+
+	/**
+	 * Returns a column subsection of a dataframe based on an array of labels.
+	 * 
+	 * @param labels the array of column labels
+	 * @return the new dataframe based on the array of labels
+	 * @throws java.lang.IllegalArgumentException if one of the labels is invalid
+	 * @since 0.4.0
+	 */
+	public Dataframe selectColumns(String[] labels) throws IllegalArgumentException {
+		Dataframe newDataframe = this.extractColumns(labels);
+		int[] index = range(0, this.rowCount);
+		newDataframe = this.extractRows(index, newDataframe);
+		return newDataframe;
+	}
+
+	/**
+	 * Returns a subsection of a dataframe based of a list of indexes and labels.
+	 * 
+	 * @param indexes the array of row indexes
+	 * @param labels the array of labels
+	 * @return the new dataframe based on the array of indexes and the array of labels
+	 * @throws java.lang.IllegalArgumentException if one of the indexes or labels is invalid
+	 * @since 0.4.0
+	 */
+	public Dataframe crossSelect(int[] indexes, String[] labels) throws IllegalArgumentException {
+		Dataframe newDataframe = this.extractColumns(labels);
+		newDataframe = this.extractRows(indexes, newDataframe);
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns a new dataframe with only the rows that have a value equals to the specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
+	 */
+	public Dataframe selectEquals(String label, Object val) {
+		Dataframe newDataframe = this.extractColumns();
+		for (int i=0; i<this.rowCount; i++) {
+			if(this.get(i, label).equals(val)) {
+				newDataframe.addRow(getRow(i));
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns a new dataframe with only the rows that have a value different to the specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
+	 */
+	public Dataframe selectNotEquals(String label, Object val) {
+		Dataframe newDataframe = this.extractColumns();
+		for (int i=0; i<this.rowCount; i++) {
+			if(!this.get(i, label).equals(val)) {
+				newDataframe.addRow(getRow(i));
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @param strict a boolean, if true then the comparison is strict.
+	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Dataframe selectGreaterThan(String label, Comparable<T> val, boolean strict) {
+		Dataframe newDataframe = this.extractColumns();
+		for(int i=0; i<this.rowCount; i++) {
+			if(strict) {
+				if(val.compareTo((T) get(i, label)) < 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+			else {
+				if(val.compareTo((T) get(i, label)) <= 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
+	 * 
+	 * @param label the label of the column to compare
+	 * @param val the value to compare
+	 * @param strict a boolean, if true then the comparison is strict.
+	 * @return a new dataframe made up of the right values
+	 * @since 0.4.0
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Dataframe selectLessThan(String label, Comparable<T> val, boolean strict) {
+		Dataframe newDataframe = this.extractColumns();
+		for(int i=0; i<this.rowCount; i++) {
+			if(strict) {
+				if(val.compareTo((T) get(i, label)) > 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+			else {
+				if(val.compareTo((T) get(i, label)) >= 0) {
+					newDataframe.addRow(getRow(i));
+				}
+			}
+		}
+		return newDataframe;
+	}
+	
+	/**
+	 * Returns the row of the specified index.
+	 * 
+	 * @param index the index of the row
+	 * @return an array of the data of the specified row
+	 * @since 0.4.0
+	 */
+	public Object[] getRow(int index) {
+		Object[] row = new Object[this.columns.size()];
+		for(int i=0; i<this.columns.size(); i++) {
+			row[i] = get(index, i);
+		}
+		return row;
 	}
 
 	@Override
@@ -354,7 +511,9 @@ public class Dataframe {
 		columns.add(new Column(type, label));
 	}
 
-	// Get index of first column labeled by label or -1 if label cannot be found
+	/*
+	 * Get index of first column labeled by label or -1 if label cannot be found.
+	 */
 	private int labelToIndex(String label) {
 		for (int i=0; i<columns.size(); i++) {
 			if (columns.get(i).getLabel().equals(label)) {
@@ -373,5 +532,54 @@ public class Dataframe {
 			throw new IllegalArgumentException("Label " + label + " does not belong to this dataframe");
 		}
 		return index;
+	}
+
+	/*
+	 * Extracts the columns of a dataframe based of an array of labels.
+	 */
+	private Dataframe extractColumns(String[] label) throws IllegalArgumentException {
+		int index;
+		Dataframe newDataframe = new Dataframe();
+		for(String s : label) {
+			index = this.labelToIndexStrict(s);
+			newDataframe.addColumn(this.columns.get(index).getType(), this.columns.get(index).getLabel());
+		}
+		return newDataframe;
+	}
+	
+	/*
+	 * Extracts all the columns of a dataframe
+	 */
+	private Dataframe extractColumns() {
+		Dataframe newDataframe = new Dataframe();
+		for (int i=0; i<this.columns.size(); i++) {
+			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
+		}
+		return newDataframe;
+	}
+	
+	/*
+	 * Extracts the rows of a dataframe based of an array of labels
+	 */
+	private Dataframe extractRows(int[] index, Dataframe data) throws IllegalArgumentException {
+		Object[] row = new Object[data.columns.size()];
+		for(int i : index) {
+			for(int j=0; j<data.columns.size(); j++) {
+				row[j] = get(i, labelToIndex(data.getLabel(j)));
+			}
+			data.addRow(row);
+		}
+		return data;
+	}
+
+	/*
+	 * Returns an array of int ranging from begin to end
+	 */
+	private int[] range(int begin, int end) {
+		int[] array = new int[end];
+		for(int i=begin; i<end; i++) {
+			array[i] = i;
+		}
+		return array;
 	}
 }

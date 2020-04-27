@@ -202,26 +202,35 @@ public class DataframeSelection {
 		int indexes[] = new int[labels.length];
 		
 		for (int i=0; i<labels.length; i++) {
-			int j = 0;
-			while (j < dataframe.columnCount() && !labels[i].equals(dataframe.getLabel(j))) {
-				j++;
-			}
-			
-			if (j == dataframe.columnCount()) {
-				throw new IllegalArgumentException("label \""+labels[i]+"\" not found");
-			}
-			
-			indexes[i] = j;
+			indexes[i] = findLabelIndex(labels[i]);
 		}
 		
 		return indexes;
 	}
 	
 	/*
+	 * Returns the index of the column labeled by the specified label in the dataframe.
+	 */
+	private int findLabelIndex(String label) throws IllegalArgumentException {
+		int i = 0;
+		
+		while (i < dataframe.columnCount() && !label.equals(dataframe.getLabel(i))) {
+			i++;
+		}
+		
+		if (i == dataframe.columnCount()) {
+			throw new IllegalArgumentException("label \""+label+"\" not found");
+		}
+		
+		return i;
+	}
+	
+	/*
 	 * Constructs a dataframe where all fields of the specified column respect the comparison 
 	 * to the specified value.
+	 * Throws an IllegalArgumentException if the value cannot be compared to the column objects.
 	 */
-	private <T> Dataframe compareSelect(String label, Comparable<T> value, Comparison sign) {
+	private <T> Dataframe compareSelect(String label, Comparable<T> value, Comparison sign) throws IllegalArgumentException {
 		// Search the column index of the specified label
 		int column = -1;
 		for (int i=0; i<dataframe.columnCount(); i++) {
@@ -246,23 +255,14 @@ public class DataframeSelection {
 
 	/*
 	 * Returns a list of row indexes that respect the comparison to the specified value.
+	 * Throws an IllegalArgumentException if the value cannot be compared to the column objects.
 	 */
-	private <T> List<Integer> rowCompared(int column, Comparable<T> value, Comparison sign) {
+	private <T> List<Integer> rowCompared(int column, Comparable<T> value, Comparison sign) throws IllegalArgumentException {
 		List<Integer> indexes = new ArrayList<Integer>();
 		
 		for (int i=0; i<dataframe.rowCount(); i++) {
-			if (dataframe.get(i, column) != null) {
-				try {
-					@SuppressWarnings("unchecked")
-					int compare = value.compareTo((T) dataframe.get(i, column));
-					
-					if (isComparisonValid(compare, sign)) {
-						indexes.add(i);
-					}
-				} catch (Exception e) {
-					throw new IllegalArgumentException(
-							"cannot compare "+dataframe.getType(column)+" to "+value.getClass(), e);
-				}
+			if (canAdd(dataframe.get(i, column), value, sign)) {
+				indexes.add(i);
 			}
 		}
 		
@@ -270,16 +270,23 @@ public class DataframeSelection {
 	}
 	
 	/*
-	 * Returns an array of int ranging from begin to end not included.
+	 * Returns true if the specified object respects the comparison to the specified value, false otherwise.
+	 * Throws an IllegalArgumentException if the value cannot be compared to the object.
 	 */
-	private int[] range(int begin, int end) {
-		int[] array = new int[end-begin];
-		
-		for(int i=begin; i<end; i++) {
-			array[i-begin] = i;
+	private <T> boolean canAdd(Object object, Comparable<T> value, Comparison sign) throws IllegalArgumentException {
+		if (object == null) {
+			return false;
 		}
 		
-		return array;
+		try {
+			@SuppressWarnings("unchecked")
+			int compare = value.compareTo((T) object);
+			
+			return isComparisonValid(compare, sign);
+		} catch (Exception e) {
+			throw new IllegalArgumentException(
+					"cannot compare "+object.getClass()+" to "+value.getClass(), e);
+		}
 	}
 	
 	/*
@@ -300,6 +307,19 @@ public class DataframeSelection {
 		default:
 			return (compare == 0);
 		}
+	}
+	
+	/*
+	 * Returns an array of int ranging from begin to end not included.
+	 */
+	private int[] range(int begin, int end) {
+		int[] array = new int[end-begin];
+		
+		for(int i=begin; i<end; i++) {
+			array[i-begin] = i;
+		}
+		
+		return array;
 	}
 	
 }

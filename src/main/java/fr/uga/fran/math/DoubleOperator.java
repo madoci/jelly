@@ -9,50 +9,42 @@ public class DoubleOperator implements Operator {
 
 	@Override
 	public Object add(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		return (Number) (n1.doubleValue() + n2.doubleValue());
+		return (Number) (value(a) + value(b));
 	}
 
 	@Override
 	public Object substract(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		return (Number) (n1.doubleValue() - n2.doubleValue());
+		return (Number) (value(a) - value(b));
 	}
 
 	@Override
 	public Object multiply(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		return (Number) (n1.doubleValue() * n2.doubleValue());
+		return (Number) (value(a) * value(b));
 	}
 
 	@Override
 	public Object divide(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		return (Number) (n1.doubleValue() / n2.doubleValue());
+		return (Number) (value(a) / value(b));
 	}
 
 	@Override
 	public Object mean(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		return (Number) ((n1.doubleValue() + n2.doubleValue()) / 2.);
+		return (Number) ((value(a) + value(b)) / 2.);
 	}
 
 	@Override
 	public int compare(Object a, Object b) {
-		Number n1 = (Number) a;
-		Number n2 = (Number) b;
-		if (n1.doubleValue() == n2.doubleValue()) {
+		if (value(a) == value(b)) {
 			return 0;
-		} else if (n1.doubleValue() > n2.doubleValue()) {
+		} else if (value(a) > value(b)) {
 			return 1;
 		} else {
 			return -1;
 		}
+	}
+	
+	protected double value(Object o) {
+		return ((Number) o).doubleValue();
 	}
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 1.0.0
- * @see fr.uga.fran.Dataframe
+ * @see fr.uga.fran.dataframe.Dataframe
  */
 public class DataframeSelection {
 	/*

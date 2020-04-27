@@ -31,11 +31,11 @@ public class IntegerStrictOperatorTest {
 	}
 
 	@Test
-	public void testSubstract() {
-		int i = (int) op.substract(12, 3);
+	public void testSubtract() {
+		int i = (int) op.subtract(12, 3);
 		assertEquals(9, i);
 		
-		i = (int) op.substract(12, -4);
+		i = (int) op.subtract(12, -4);
 		assertEquals(16, i);
 	}
 

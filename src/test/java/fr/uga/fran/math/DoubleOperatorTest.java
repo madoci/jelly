@@ -31,11 +31,11 @@ public class DoubleOperatorTest {
 	}
 
 	@Test
-	public void testSubstract() {
-		double d = (double) op.substract(12.5, 3);
+	public void testSubtract() {
+		double d = (double) op.subtract(12.5, 3);
 		assertEquals(9.5, d, epsilon);
 		
-		d = (double) op.substract(12., -3.56);
+		d = (double) op.subtract(12., -3.56);
 		assertEquals(15.56, d, epsilon);
 	}
 

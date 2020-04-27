@@ -1,5 +1,12 @@
 package fr.uga.fran.math;
 
+/**
+ * An implementation of the Operator interface for operating on doubles.
+ *
+ * @author ANDRE Stephen
+ * @author FREBY Laura
+ * @since 1.0.0
+ */
 public class DoubleOperator implements Operator {
 
 	@Override
@@ -13,7 +20,7 @@ public class DoubleOperator implements Operator {
 	}
 
 	@Override
-	public Object substract(Object a, Object b) {
+	public Object subtract(Object a, Object b) {
 		return (Number) (value(a) - value(b));
 	}
 
@@ -42,7 +49,15 @@ public class DoubleOperator implements Operator {
 			return -1;
 		}
 	}
+
+
+	/*---------------------------------*/
+	/*-----    Private methods    -----*/
+	/*---------------------------------*/
 	
+	/*
+	 * Returns the double value of the specified object.
+	 */
 	protected double value(Object o) {
 		return ((Number) o).doubleValue();
 	}

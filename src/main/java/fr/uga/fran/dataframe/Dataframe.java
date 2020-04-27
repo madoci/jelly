@@ -15,8 +15,8 @@ import java.util.List;
  * @author FREBY Laura
  * @since 0.1.0
  * @see fr.uga.fran.dataframe.Column
- * @see fr.uga.fran.DataframeViewer
- * @see fr.uga.fran.TabularDataframeViewer
+ * @see fr.uga.fran.dataframe.DataframeViewer
+ * @see fr.uga.fran.dataframe.TabularDataframeViewer
  * @see fr.uga.fran.dataframe.DataframeSelection
  */
 public class Dataframe {
@@ -211,10 +211,25 @@ public class Dataframe {
 		return row;
 	}
 	
+	/**
+	 * Returns an array of all object in the specified column.
+	 * 
+	 * @param index the index of the specified column
+	 * @return an array of all object in the specified column
+	 * @since 1.0.0
+	 */
 	public Object[] getColumn(int index) {
 		return columns.get(index).getArray();
 	}
-	
+
+	/**
+	 * Returns an array of all object in the column labeled by the specified label.
+	 * 
+	 * @param label the label of the column
+	 * @return an array of all object in the specified column
+	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this dataframe
+	 * @since 1.0.0
+	 */
 	public Object[] getColumn(String label) throws IllegalArgumentException {
 		return columns.get(labelToIndexStrict(label)).getArray();
 	}
@@ -328,7 +343,7 @@ public class Dataframe {
 	}
 
 	/**
-	 * Provides a DataframeSelection to perform selection on this dataframe.
+	 * Provides a DataframeSelection object to perform selection on this dataframe.
 	 *
 	 * @return a dataframe selection associated to this dataframe
 	 * @since 1.0.0
@@ -337,6 +352,12 @@ public class Dataframe {
 		return selection;
 	}
 	
+	/**
+	 * Provides a DataframeStatistics object to perform statistics on this dataframe.
+	 * 
+	 * @return a dataframe statistics associated to this dataframe
+	 * @since 1.0.0
+	 */
 	public DataframeStatistics stats() {
 		return statistics;
 	}

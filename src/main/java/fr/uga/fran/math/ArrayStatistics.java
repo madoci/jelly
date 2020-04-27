@@ -6,10 +6,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class contains static methods to perform statistics on array of objects.
+ * The class of objects in an array must have an operator associated to it in order
+ * to be able to perform statistics. The static method setOperator allow for users 
+ * to add their own implementation of Operator for a specific class.
+ * By default, IntegerStrictOperator is used for integers, and DoubleStrictOperator
+ * is used for doubles and any other class extending Number.
+ *
+ * @author ANDRE Stephen
+ * @author FREBY Laura
+ * @since 1.0.0
+ * @see fr.uga.fran.math.Operator
+ * @see fr.uga.fran.math.IntegerStrictOperator
+ * @see fr.uga.fran.math.DoubleOperator
+ */
 public class ArrayStatistics {
 	
 	private static Map<Class<?>, Operator> operatorsMap;
 	
+	/**
+	 * Returns the index of the lowest value in the specified array.
+	 * 
+	 * @param array the array to get the min from
+	 * @return the index of the lowest value in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static int argmin(Object[] array) throws IllegalArgumentException {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
@@ -24,7 +46,14 @@ public class ArrayStatistics {
 		
 		return argmin;
 	}
-	
+
+	/**
+	 * Returns the index of the greatest value in the specified array.
+	 * 
+	 * @param array the array to get the max from
+	 * @return the index of the greatest value in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static int argmax(Object[] array) throws IllegalArgumentException {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
@@ -39,15 +68,36 @@ public class ArrayStatistics {
 		
 		return argmax;
 	}
-	
+
+	/**
+	 * Returns the lowest value in the specified array.
+	 * 
+	 * @param array the array to get the min from
+	 * @return the lowest value in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static Object min(Object[] array) throws IllegalArgumentException {
 		return array[argmin(array)];
 	}
-	
+
+	/**
+	 * Returns the greatest value in the specified array.
+	 * 
+	 * @param array the array to get the max from
+	 * @return the greatest value in the specified array
+	 * @throws IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static Object max(Object[] array) throws IllegalArgumentException {
 		return array[argmax(array)];
 	}
-	
+
+	/**
+	 * Returns the sum of all elements in the specified array.
+	 * 
+	 * @param array the array to get the sum from
+	 * @return the sum of all elements in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static Object sum(Object[] array) throws IllegalArgumentException {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
@@ -61,7 +111,14 @@ public class ArrayStatistics {
 		
 		return sum;
 	}
-	
+
+	/**
+	 * Returns the mean of all elements in the specified array.
+	 * 
+	 * @param array the array to get the mean from
+	 * @return the mean of all elements in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static Object mean(Object[] array) throws IllegalArgumentException {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
@@ -78,7 +135,14 @@ public class ArrayStatistics {
 		
 		return operator.divide(sum, count);
 	}
-	
+
+	/**
+	 * Returns the median of all elements in the specified array.
+	 * 
+	 * @param array the array to get the median from
+	 * @return the median of all elements in the specified array
+	 * @throws java.lang.IllegalArgumentException if the objects in the array are not associated to any operator
+	 */
 	public static Object median(Object[] array) throws IllegalArgumentException {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
@@ -95,10 +159,24 @@ public class ArrayStatistics {
 		return median;
 	}
 	
+	/**
+	 * Set an operator to use for the specified type.
+	 * 
+	 * @param type the type to associate the operator to
+	 * @param operator the operator to use
+	 */
 	public static void setOperator(Class<?> type, Operator operator) {
 		operatorsMap.put(type, operator);
 	}
+
+
+	/*---------------------------------*/
+	/*-----    Private methods    -----*/
+	/*---------------------------------*/
 	
+	/*
+	 * Initialize the static field and fill it with the default operators. 
+	 */
 	private static void initialize() {
 		operatorsMap = new HashMap<>();
 		setOperator(Integer.class, new IntegerStrictOperator());
@@ -137,6 +215,10 @@ public class ArrayStatistics {
 		}
 	}
 	
+	/*
+	 * Returns an array corresponding to the specified array sorted according to
+	 * the operator.
+	 */
 	private static Object[] sortArray(Object[] array, Operator operator) {
 		List<Object> sorted = new ArrayList<>();
 		

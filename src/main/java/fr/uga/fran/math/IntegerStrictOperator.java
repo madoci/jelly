@@ -1,6 +1,14 @@
 package fr.uga.fran.math;
 
-
+/**
+ * An implementation of the Operator interface for operating on integers.
+ * All operations returns strict integers, including division and mean.
+ *
+ * @author ANDRE Stephen
+ * @author FREBY Laura
+ * @since 1.0.0
+ * @see fr.uga.fran.math.IntegerOperator
+ */
 public class IntegerStrictOperator implements Operator {
 
 	@Override
@@ -14,7 +22,7 @@ public class IntegerStrictOperator implements Operator {
 	}
 
 	@Override
-	public Object substract(Object a, Object b) {
+	public Object subtract(Object a, Object b) {
 		return (Number) (value(a) - value(b));
 	}
 
@@ -43,7 +51,15 @@ public class IntegerStrictOperator implements Operator {
 			return -1;
 		}
 	}
+
+
+	/*---------------------------------*/
+	/*-----    Private methods    -----*/
+	/*---------------------------------*/
 	
+	/*
+	 * Returns the integer value of the specified object as a Number.
+	 */
 	protected int value(Object o) {
 		return ((Number) o).intValue();
 	}

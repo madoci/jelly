@@ -4,7 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class for a labeled array of objects of a certain data type.
+ * Labeled list of objects of a certain data type.
+ * This is the class for columns inside a dataframe.
+ *
+ * @author ANDRE Stephen
+ * @author FREBY Laura
+ * @since 1.0.0
+ * @see fr.uga.fran.Dataframe
  */
 public class Column {
 	private final Class<?> type;
@@ -12,7 +18,10 @@ public class Column {
 	private List<Object> list;
 
 	/**
-	 * Create a column with the specified data type and label.
+	 * Constructs a column with the specified data type and label.
+	 * 
+	 * @param type the data type of this column
+	 * @param label the label of this column
 	 */
 	public Column(Class<?> type, String label) {
 		this.type = type;
@@ -22,7 +31,9 @@ public class Column {
 
 	/**
 	 * Add an element of data type at the end of this column.
-	 * Throws IllegalArgumentException if the specified element is not of the same type
+	 * 
+	 * @param element the element to add to this column
+	 * @throws java.lang.IllegalArgumentException if the specified element is not of the same type
 	 * as the column data type.
 	 */
 	public void add(Object element) throws IllegalArgumentException {
@@ -36,16 +47,23 @@ public class Column {
 
 	/**
 	 * Returns the object located at the specified index.
+	 *
+	 * @param index the row index
+	 * @return the object located at the specified index
 	 */
 	public Object get(int index) { return list.get(index); }
 
 	/**
 	 * Returns the data type of this column.
+	 *
+	 * @return the data type of this column
 	 */
 	public Class<?> getType() { return type; }
 
 	/**
 	 * Returns the label of this column.
+	 *
+	 * @return the label of this column
 	 */
 	public String getLabel() { return label; }
 }

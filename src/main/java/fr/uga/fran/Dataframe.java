@@ -319,7 +319,7 @@ public class Dataframe {
 	}
 	
 	/**
-	 * Returns a dataframe selection associated to this dataframe.
+	 * Provides a DataframeSelection to perform selection on this dataframe.
 	 * 
 	 * @return a dataframe selection associated to this dataframe
 	 * @since 1.0.0

@@ -194,6 +194,28 @@ public class DataframeSelection {
 	/*---------------------------------*/
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
+
+	/*
+	 * Returns an array of indexes of the dataframe columns with the specified labels.
+	 */
+	private int[] columnIndexes(String[] labels) {
+		int indexes[] = new int[labels.length];
+		
+		for (int i=0; i<labels.length; i++) {
+			int j = 0;
+			while (j < dataframe.columnCount() && !labels[i].equals(dataframe.getLabel(j))) {
+				j++;
+			}
+			
+			if (j == dataframe.columnCount()) {
+				throw new IllegalArgumentException("label \""+labels[i]+"\" not found");
+			}
+			
+			indexes[i] = j;
+		}
+		
+		return indexes;
+	}
 	
 	/*
 	 * Constructs a dataframe where all fields of the specified column respect the comparison 
@@ -209,7 +231,7 @@ public class DataframeSelection {
 		}
 		
 		// Search all row indexes respecting the comparison
-		List<Integer> indexes = rowIndexes(column, value, sign);
+		List<Integer> indexes = rowCompared(column, value, sign);
 		int rows[] = new int[indexes.size()];
 		
 		for (int i=0; i<indexes.size(); i++) {
@@ -221,33 +243,11 @@ public class DataframeSelection {
 		
 		return cross(rows, columns);
 	}
-	
-	/*
-	 * Returns an array of indexes of the dataframe columns with the specified labels.
-	 */
-	private int[] columnIndexes(String[] labels) {
-		int indexes[] = new int[labels.length];
-		
-		for (int i=0; i<labels.length; i++) {
-			int j = 0;
-			while (j < dataframe.columnCount() && !labels[i].equals(dataframe.getLabel(j))) {
-				j++;
-			}
-			
-			if (j == dataframe.columnCount()) {
-				throw new IllegalArgumentException("");
-			}
-			
-			indexes[i] = j;
-		}
-		
-		return indexes;
-	}
 
 	/*
 	 * Returns a list of row indexes that respect the comparison to the specified value.
 	 */
-	private <T> List<Integer> rowIndexes(int column, Comparable<T> value, Comparison sign) {
+	private <T> List<Integer> rowCompared(int column, Comparable<T> value, Comparison sign) {
 		List<Integer> indexes = new ArrayList<Integer>();
 		
 		for (int i=0; i<dataframe.rowCount(); i++) {

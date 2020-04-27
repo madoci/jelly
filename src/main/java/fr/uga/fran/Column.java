@@ -23,7 +23,13 @@ public class Column {
 	 * @param type the data type of this column
 	 * @param label the label of this column
 	 */
-	public Column(Class<?> type, String label) {
+	public Column(Class<?> type, String label) throws IllegalArgumentException {
+		if (type == null) {
+			throw new IllegalArgumentException("type cannot be null");
+		} else if (label == null) {
+			throw new IllegalArgumentException("label cannot be null");
+		}
+		
 		this.type = type;
 		this.label = label;
 		list = new ArrayList<>();

@@ -41,15 +41,20 @@ public class CSVParser {
 		 * Advances to the next field and returns the field skipped.
 		 */
 		public String nextField() throws InvalidCSVFormatException {
-			String field = new String();
+			String field = null;
 			
 			while (currentChar() != ',') {
+				if (field == null) {
+					field = new String();
+				}
+				
 				if (currentChar() == '"') {
 					position++;
 					field = nextQuote();
 				} else {
 					field += currentChar();
 				}
+				
 				position++;
 			}
 			position++;
@@ -155,11 +160,6 @@ public class CSVParser {
 	 * The interpreted type is returned as an Object.
 	 */
 	private Object processData(String data) {
-		// If data is empty, we return null
-		if (data.length() == 0) {
-			return null;
-		}
-		
 		Object obj;
 		
 		// We first try to convert it into an Integer

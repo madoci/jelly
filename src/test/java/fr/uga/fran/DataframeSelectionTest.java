@@ -158,9 +158,30 @@ public class DataframeSelectionTest {
 	
 	@Test
 	public void testGreaterEqual() throws Exception {
-		Dataframe newData = selection.greaterEqual("Constructeur", "Fz");
+		Dataframe newData = selection.greaterEqual("Constructeur", "Jeep");
 		
 		assertEquals("Jeep", (String) newData.get(0, 1));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalLabel() throws Exception {
+		String labels[] = { "Année", "Carburant" };
+		
+		selection.column(labels);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalCompare() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+		Integer col3[] = { null, 28, 61 };
+		Double col4[] = { 1.05, -2.7, 32.45 };
+		
+		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
+		selection = new DataframeSelection(data);
+		
+		selection.lessThan("Age", 30.0);
 	}
 
 }

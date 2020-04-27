@@ -7,9 +7,36 @@ import org.junit.Test;
 
 
 public class DataframeTest {
+	
+	@Test
+	public void testEmptyConstructor() throws Exception {
+		String labels[] = { "Surname", "Name" };
+		Class<?> types[] = { String.class, String.class, Integer.class };
+		
+		Dataframe data = new Dataframe(labels, types);
+		
+		assertEquals("Surname", data.getLabel(0));
+		assertEquals("Name", data.getLabel(1));
+		assertEquals("", data.getLabel(2));
+		
+		assertEquals(String.class, data.getType(0));
+		assertEquals(String.class, data.getType("Surname"));
+		assertEquals(String.class, data.getType(1));
+		assertEquals(String.class, data.getType("Name"));
+		assertEquals(Integer.class, data.getType(2));
+		assertEquals(Integer.class, data.getType(""));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalEmptyConstructor() throws Exception {
+		String labels[] = { "Surname", "Name" };
+		Class<?> types[] = { String.class, String.class, null };
+		
+		new Dataframe(labels, types);
+	}
 
 	@Test
-	public void testArrayConstructor() {
+	public void testArrayConstructor() throws Exception {
 		String labels[] = { "Surname", "Name", "Age" };
 		String col1[] = { "A", "B", "C" };
 		String col2[] = { "Denise", "John Dorian" };
@@ -62,6 +89,31 @@ public class DataframeTest {
 			}
 		}
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullArrayConstructor() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+		Integer col3[] = { null, null };
+		Double col4[] = { 1.05, -2.7, 32.45 };
+		
+		new Dataframe(labels, col1, col2, col3, col4);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalArrayConstructor() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+
+		int a = 46;
+		int b = 28;
+		double c = 61.5;
+		Object col3[] = { a, b, c };
+
+		new Dataframe(labels, col1, col2, col3);
+	}
 
 	@Test
 	public void testCSVConstructor() throws Exception {
@@ -92,7 +144,7 @@ public class DataframeTest {
 		assertEquals(1999, (int) data.get(1, 0));
 		assertEquals("Chevy", (String) data.get(1, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) data.get(1, 2));
-		assertNull(data.get(1, 3));
+		assertEquals("", data.get(1, 3));
 		assertEquals(4900., (double) data.get(1, 4), 0.005);
 
 		// Check row 3
@@ -108,6 +160,21 @@ public class DataframeTest {
 		assertEquals("Grand Cherokee", (String) data.get(3, 2));
 		assertEquals("MUST SELL! air, moon roof, loaded", (String) data.get(3, 3));
 		assertEquals(4799., (double) data.get(3, 4), 0.005);
+	}
+
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testEmptyFile() throws Exception {
+		new Dataframe("src/test/resources/empty.csv");
+	}
+
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testInvalidNumFields() throws Exception {
+		new Dataframe("src/test/resources/missingfields.csv");
+	}
+
+	@Test(expected = InvalidCSVFormatException.class)
+	public void testEmptyColumn() throws Exception {
+		new Dataframe("src/test/resources/emptycolumn.csv");
 	}
 
 	@Test
@@ -129,19 +196,24 @@ public class DataframeTest {
 		assertNull(data.get(4, 4));
 	}
 
-	@Test(expected = InvalidCSVFormatException.class)
-	public void testEmptyFile() throws Exception {
-		new Dataframe("src/test/resources/empty.csv");
-	}
+	@Test(expected = IllegalArgumentException.class)
+	public void testIllegalAddRow() throws Exception {
+		String labels[] = { "Surname", "Name", "Age" };
+		String col1[] = { "A", "B", "C" };
+		String col2[] = { "Denise", "John Dorian" };
+		Integer col3[] = { 46, 28, 61 };
+		Double col4[] = { 1.05, -2.7, 32.45 };
 
-	@Test(expected = InvalidCSVFormatException.class)
-	public void testInvalidNumFields() throws Exception {
-		new Dataframe("src/test/resources/missingfields.csv");
-	}
+		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
 
-	@Test(expected = InvalidCSVFormatException.class)
-	public void testEmptyColumn() throws Exception {
-		new Dataframe("src/test/resources/emptycolumn.csv");
+		String a = "D";
+		int b = 2;
+		int c = 40;
+		double d = 12.4;
+
+		Object row[] = { a, b, c, d };
+
+		data.addRow(row);
 	}
 	
 	@Test
@@ -170,6 +242,25 @@ public class DataframeTest {
 		assertEquals(4, data.rowCount());
 		assertEquals(5, data.columnCount());
 	}
+	
+	@Test
+	public void testGetRow() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		Object[] row = data.getRow(1);
+		
+		Integer annee = (Integer) row[0];
+		String constructeur = (String) row[1];
+		String modele = (String) row[2];
+		String description = (String) row[3];
+		Double prix = (Double) row[4];
+		
+		assertEquals(1999, (int) annee);
+		assertEquals("Chevy", constructeur);
+		assertEquals("Venture \"Extended Edition\"", modele);
+		assertEquals("", description);
+		assertEquals(4900.00, (double) prix, 0.0001);
+	}
 
 	@Test
 	public void testDefaultViewer() throws Exception {
@@ -197,40 +288,6 @@ public class DataframeTest {
 		assertEquals(viewer.head(data, 0), data.head(0));
 		assertEquals(viewer.tail(data, 2), data.tail(2));
 		assertEquals(viewer.view(data), data.toString());
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testIllegalArrayConstructor() throws Exception {
-		String labels[] = { "Surname", "Name", "Age" };
-		String col1[] = { "A", "B", "C" };
-		String col2[] = { "Denise", "John Dorian" };
-
-		int a = 46;
-		int b = 28;
-		double c = 61.5;
-		Object col3[] = { a, b, c };
-
-		new Dataframe(labels, col1, col2, col3);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testIllegalAddRow() throws Exception {
-		String labels[] = { "Surname", "Name", "Age" };
-		String col1[] = { "A", "B", "C" };
-		String col2[] = { "Denise", "John Dorian" };
-		Integer col3[] = { 46, 28, 61 };
-		Double col4[] = { 1.05, -2.7, 32.45 };
-
-		Dataframe data = new Dataframe(labels, col1, col2, col3, col4);
-
-		String a = "D";
-		int b = 2;
-		int c = 40;
-		double d = 12.4;
-
-		Object row[] = { a, b, c, d };
-
-		data.addRow(row);
 	}
 
 }

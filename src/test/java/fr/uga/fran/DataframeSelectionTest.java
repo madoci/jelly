@@ -17,32 +17,32 @@ public class DataframeSelectionTest {
 
 	@Test
 	public void testRow() {
-		int[] i = {1, 2};
-		Dataframe newData = selection.row(i);
+		int[] rows = {1, 2};
+		Dataframe newData = selection.row(rows);
 		
 		assertEquals(1999, (int) newData.get(0, 0));
 		assertEquals("Chevy", (String) newData.get(0, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) newData.get(0, 2));
-		assertNull(newData.get(0, 3));
+		assertEquals("", newData.get(0, 3));
 		assertEquals(4900.00, (double) newData.get(0, 4), 0.005);
 
 		assertEquals(1999, (int) newData.get(1, 0));
 		assertEquals("Chevy", (String) newData.get(1, 1));
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) newData.get(1, 2));
-		assertNull(newData.get(0, 3));
+		assertNull(newData.get(1, 3));
 		assertEquals(5000.00, (double) newData.get(1, 4), 0.005);
 	}
 	
 	@Test
 	public void testColumnIndex() throws Exception {
-		int[] i = {1, 3};
-		Dataframe newData = selection.column(i);
+		int[] columns = {1, 3};
+		Dataframe newData = selection.column(columns);
 		
 		assertEquals("Ford", (String) newData.get(0, 0));
 		assertEquals("ac, abs, moon", (String) newData.get(0, 1));
 
 		assertEquals("Chevy", (String) newData.get(1, 0));
-		assertNull(newData.get(1, 1));
+		assertEquals("", newData.get(1, 1));
 
 		assertEquals("Chevy", (String) newData.get(2, 0));
 		assertNull(newData.get(2, 1));
@@ -53,14 +53,14 @@ public class DataframeSelectionTest {
 	
 	@Test
 	public void testColumnLabel() throws Exception {
-		String[] i = {"Constructeur", "Description"};
-		Dataframe newData = selection.column(i);
+		String[] labels = {"Constructeur", "Description"};
+		Dataframe newData = selection.column(labels);
 		
 		assertEquals("Ford", (String) newData.get(0, 0));
 		assertEquals("ac, abs, moon", (String) newData.get(0, 1));
 
 		assertEquals("Chevy", (String) newData.get(1, 0));
-		assertNull(newData.get(1, 1));
+		assertEquals("", newData.get(1, 1));
 
 		assertEquals("Chevy", (String) newData.get(2, 0));
 		assertNull(newData.get(2, 1));
@@ -71,9 +71,9 @@ public class DataframeSelectionTest {
 
 	@Test
 	public void testCrossIndex() throws Exception {
-		int[] i = {2, 3};
-		int[] j = {1, 3};
-		Dataframe newData = selection.cross(i, j);
+		int[] rows = {2, 3};
+		int[] columns = {1, 3};
+		Dataframe newData = selection.cross(rows, columns);
 		
 		assertEquals("Chevy", (String) newData.get(0,0));
 		assertNull(newData.get(0, 1));
@@ -84,9 +84,9 @@ public class DataframeSelectionTest {
 
 	@Test
 	public void testCrossLabel() throws Exception {
-		int[] i = {2, 3};
-		String[] j = {"Constructeur", "Description"};
-		Dataframe newData = selection.cross(i, j);
+		int[] rows = {2, 3};
+		String[] labels = {"Constructeur", "Description"};
+		Dataframe newData = selection.cross(rows, labels);
 		
 		assertEquals("Chevy", (String) newData.get(0,0));
 		assertNull(newData.get(0, 1));
@@ -115,7 +115,7 @@ public class DataframeSelectionTest {
 		assertEquals(1999, (int) newData.get(0, 0));
 		assertEquals("Chevy", (String) newData.get(0, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) newData.get(0,  2));
-		assertNull(newData.get(0, 3));
+		assertEquals("", newData.get(0, 3));
 		assertEquals(4900.00, (double) newData.get(0, 4), 0.005);
 		
 		assertEquals(1999, (int) newData.get(1, 0));

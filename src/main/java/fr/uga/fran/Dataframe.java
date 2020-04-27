@@ -345,6 +345,7 @@ public class Dataframe {
 		columns = new ArrayList<>();
 		rowCount = 0;
 		viewer = new TabularDataframeViewer();
+		selection = new DataframeSelection(this);
 		
 		// Add columns
 		for (int i=0; i<types.length; i++) {

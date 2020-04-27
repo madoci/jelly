@@ -289,5 +289,20 @@ public class DataframeTest {
 		assertEquals(viewer.tail(data, 2), data.tail(2));
 		assertEquals(viewer.view(data), data.toString());
 	}
+	
+	@Test
+	public void testSelect() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		
+		Dataframe newData = data.select().lessEqual("Constructeur", "Chevy");
+		
+		assertEquals(1999, (int) newData.get(0, "Année"));
+		assertEquals("Venture \"Extended Edition\"", newData.get(0, "Modèle"));
+		assertEquals("", newData.get(0, "Description"));
+
+		assertEquals("Chevy", newData.get(1, "Constructeur"));
+		assertNull(newData.get(1, "Description"));
+		assertEquals(5000.0, (double) newData.get(1, "Prix"), 0.00001);
+	}
 
 }

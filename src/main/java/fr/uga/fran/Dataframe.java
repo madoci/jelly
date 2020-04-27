@@ -14,94 +14,58 @@ import java.util.List;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.1.0
+ * @see fr.uga.fran.Column
  * @see fr.uga.fran.DataframeViewer
  * @see fr.uga.fran.TabularDataframeViewer
+ * @see fr.uga.fran.DataframeSelection
  */
 public class Dataframe {
-	/*
-	 * Class for the labeled columns inside a Dataframe.
-	 */
-	private class Column {
-		private final Class<?> type;
-		private String label;
-		private List<Object> list;
-
-		/*
-		 * Create a column with the specified data type and label.
-		 */
-		public Column(Class<?> type, String label) {
-			this.type = type;
-			this.label = label;
-			list = new ArrayList<>();
-		}
-
-		/*
-		 * Add an element of data type at the end of this column.
-		 * Throws IllegalArgumentException if the specified element is not of the same type
-		 * as the column data type.
-		 */
-		public void add(Object element) throws IllegalArgumentException {
-			if (element == null || type.isInstance(element)) {
-				list.add(element);
-			} else {
-				throw new IllegalArgumentException(
-						"Element is of " + element.getClass() + " instead of " + type);
-			}
-		}
-
-		/*
-		 * Returns the object located at the specified index.
-		 */
-		public Object get(int index) { return list.get(index); }
-
-		/*
-		 * Returns the data type of this column.
-		 */
-		public Class<?> getType() { return type; }
-
-		/*
-		 * Returns the label of this column.
-		 */
-		public String getLabel() { return label; }
-	}
 
 	private List<Column> columns;
 	private int rowCount;
 	private DataframeViewer viewer;
+	private DataframeSelection selection;
+	
+	/**
+	 * Constructs a dataframe from an array of labels and an array of data types.
+	 * 
+	 * @param labels the array of labels
+	 * @param types the array of data types
+	 * @since 1.0.0
+	 */
+	public Dataframe(String[] labels, Class<?>[] types) {
+		initialize(labels, types);
+	}
 
 	/**
 	 * Constructs a dataframe from an array of labels and arrays of columns.
 	 *
 	 * @param labels the array of labels, in the same order as the columns
 	 * @param data variable amount of arrays each containing the content of a column
-	 * @throws java.lang.IllegalArgumentException if a column array is composed of objects of different types
+	 * @throws java.lang.IllegalArgumentException if a column array is composed of objects 
+	 * of different types or only null references
 	 */
-	public Dataframe(String labels[], Object[] ...data) throws IllegalArgumentException {
-		this();
-
+	public Dataframe(String[] labels, Object[] ...data) throws IllegalArgumentException {
+		Class<?> types[] = new Class<?>[data.length];
 		int numRows = 0;
-
-		// Add columns
+		
+		// Find types for all columns
 		for (int i=0; i<data.length; i++) {
-			// If no label is provided, the label is an empty string
-			String label = "";
-			if (i < labels.length) {
-				label = labels[i];
-			}
-
-			// The data type of the column is retrieved from the first element of this column
-			addColumn(data[i][0].getClass(), label);
-
-			// Keep track of the maximum number of rows between all columns
+			types[i] = findDataType(data[i]);
+			
+			// Keep track of the maximum number of rows
 			if (data[i].length > numRows) {
 				numRows = data[i].length;
 			}
 		}
+		
+		initialize(labels, types);
 
 		// Add rows
 		for (int i=0; i<numRows; i++) {
 			Object row[] = new Object[columns.size()];
 			for (int j=0; j<columns.size(); j++) {
+				// Add the object to the row, or null to fill a column too small
 				if (i < data[j].length) {
 					row[j] = data[j][i];
 				} else {
@@ -121,45 +85,54 @@ public class Dataframe {
 	 * @since 0.2.0
 	 */
 	public Dataframe(String pathname) throws FileNotFoundException, InvalidCSVFormatException {
-		this();
-
+		// Create a parser
 		CSVParser parser = new CSVParser(pathname);
 
 		// First row of the file contains the labels
-		Object[] labels = parser.readLine();
-		if (labels == null) {
+		Object[] line = parser.readLine();
+		if (line == null) {
 			throw new InvalidCSVFormatException("file is empty");
 		}
-
-		List<Object[]> lines = new ArrayList<>();
-		Object[] data;
+		
+		// Converts the array of Object into an array of String to initialize
+		String[] labels = new String[line.length];
+		for (int i=0; i<line.length; i++) {
+			labels[i] = (String) line[i];
+		}
 
 		// Parse and store all lines first
+		List<Object[]> rows = new ArrayList<>();
+		Object[] data;
+
 		while ((data = parser.readLine()) != null) {
-			lines.add(data);
+			rows.add(data);
 			// All lines must have the same number of fields
 			if (data.length != labels.length) {
-				throw new InvalidCSVFormatException("invalid number of fields at line " + lines.size());
+				throw new InvalidCSVFormatException("invalid number of fields at line " + rows.size());
 			}
 		}
-
-		// Add columns
+		
+		// Search for the types of all columns
+		Class<?> types[] = new Class<?>[labels.length];
+		
 		for (int i=0; i<labels.length; i++) {
-			// Search first not null element in the column to retrieve the type
 			int j = 0;
-			while (j < lines.size() && lines.get(j)[i] == null) {
+			while (j < rows.size() && rows.get(j)[i] == null) {
 				j++;
 			}
-			// Empty column is considered an error because we cannot infer data type
-			if (j >= lines.size()) {
+			
+			// If all objects in the column are null
+			if (j == rows.size()) {
 				throw new InvalidCSVFormatException("no data found in column " + i);
 			}
-
-			addColumn(lines.get(j)[i].getClass(), (String) labels[i]);
+			
+			types[i] = rows.get(j)[i].getClass();
 		}
 
+		initialize(labels, types);
+
 		// Add rows
-		for (Object[] row : lines) {
+		for (Object[] row : rows) {
 			addRow(row);
 		}
 	}
@@ -218,6 +191,23 @@ public class Dataframe {
 	 */
 	public Class<?> getType(String label) throws IllegalArgumentException {
 		return getType(labelToIndexStrict(label));
+	}
+	
+	/**
+	 * Returns the row of the specified index.
+	 * 
+	 * @param index the index of the row inside this dataframe
+	 * @return an array of the specified row data
+	 * @since 0.4.0
+	 */
+	public Object[] getRow(int index) {
+		Object[] row = new Object[this.columns.size()];
+		
+		for(int i=0; i<this.columns.size(); i++) {
+			row[i] = get(index, i);
+		}
+		
+		return row;
 	}
 
 	/**
@@ -327,162 +317,15 @@ public class Dataframe {
 	public String tail(int num) {
 		return viewer.tail(this, num);
 	}
-
-	/**
-	 * Returns a row subsection of a dataframe based on an array of indexes.
-	 * 
-	 * @param indexes the array of row indexes
-	 * @return the new dataframe based on the array of indexes
-	 * @throws java.lang.IllegalArgumentException if one of the indexes is invalid
-	 * @since 0.4.0
-	 */
-	public Dataframe selectRows(int[] indexes) {
-		Object[] row = new Object[this.columns.size()];
-		Dataframe newDataframe = this.extractColumns();
-		
-		for(Integer i : indexes) {
-			for(int j=0; j<this.columns.size(); j++) {
-				row[j] = this.get(i, j);
-			}
-			newDataframe.addRow(row);
-		}
-		
-		return newDataframe;
-	}
-
-	/**
-	 * Returns a column subsection of a dataframe based on an array of labels.
-	 * 
-	 * @param labels the array of column labels
-	 * @return the new dataframe based on the array of labels
-	 * @throws java.lang.IllegalArgumentException if one of the labels is invalid
-	 * @since 0.4.0
-	 */
-	public Dataframe selectColumns(String[] labels) throws IllegalArgumentException {
-		Dataframe newDataframe = this.extractColumns(labels);
-		int[] index = range(0, this.rowCount);
-		newDataframe = this.extractRows(index, newDataframe);
-		return newDataframe;
-	}
-
-	/**
-	 * Returns a subsection of a dataframe based of a list of indexes and labels.
-	 * 
-	 * @param indexes the array of row indexes
-	 * @param labels the array of labels
-	 * @return the new dataframe based on the array of indexes and the array of labels
-	 * @throws java.lang.IllegalArgumentException if one of the indexes or labels is invalid
-	 * @since 0.4.0
-	 */
-	public Dataframe crossSelect(int[] indexes, String[] labels) throws IllegalArgumentException {
-		Dataframe newDataframe = this.extractColumns(labels);
-		newDataframe = this.extractRows(indexes, newDataframe);
-		return newDataframe;
-	}
 	
 	/**
-	 * Returns a new dataframe with only the rows that have a value equals to the specified value.
+	 * Provides a DataframeSelection to perform selection on this dataframe.
 	 * 
-	 * @param label the label of the column to compare
-	 * @param val the value to compare
-	 * @return a new dataframe made up of the right values
-	 * @since 0.4.0
+	 * @return a dataframe selection associated to this dataframe
+	 * @since 1.0.0
 	 */
-	public Dataframe selectEquals(String label, Object val) {
-		Dataframe newDataframe = this.extractColumns();
-		for (int i=0; i<this.rowCount; i++) {
-			if(this.get(i, label).equals(val)) {
-				newDataframe.addRow(getRow(i));
-			}
-		}
-		return newDataframe;
-	}
-	
-	/**
-	 * Returns a new dataframe with only the rows that have a value different to the specified value.
-	 * 
-	 * @param label the label of the column to compare
-	 * @param val the value to compare
-	 * @return a new dataframe made up of the right values
-	 * @since 0.4.0
-	 */
-	public Dataframe selectNotEquals(String label, Object val) {
-		Dataframe newDataframe = this.extractColumns();
-		for (int i=0; i<this.rowCount; i++) {
-			if(!this.get(i, label).equals(val)) {
-				newDataframe.addRow(getRow(i));
-			}
-		}
-		return newDataframe;
-	}
-	
-	/**
-	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
-	 * 
-	 * @param label the label of the column to compare
-	 * @param val the value to compare
-	 * @param strict a boolean, if true then the comparison is strict.
-	 * @return a new dataframe made up of the right values
-	 * @since 0.4.0
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> Dataframe selectGreaterThan(String label, Comparable<T> val, boolean strict) {
-		Dataframe newDataframe = this.extractColumns();
-		for(int i=0; i<this.rowCount; i++) {
-			if(strict) {
-				if(val.compareTo((T) get(i, label)) < 0) {
-					newDataframe.addRow(getRow(i));
-				}
-			}
-			else {
-				if(val.compareTo((T) get(i, label)) <= 0) {
-					newDataframe.addRow(getRow(i));
-				}
-			}
-		}
-		return newDataframe;
-	}
-	
-	/**
-	 * Returns a new dataframe with only the rows that have a value greater than the specified value.
-	 * 
-	 * @param label the label of the column to compare
-	 * @param val the value to compare
-	 * @param strict a boolean, if true then the comparison is strict.
-	 * @return a new dataframe made up of the right values
-	 * @since 0.4.0
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> Dataframe selectLessThan(String label, Comparable<T> val, boolean strict) {
-		Dataframe newDataframe = this.extractColumns();
-		for(int i=0; i<this.rowCount; i++) {
-			if(strict) {
-				if(val.compareTo((T) get(i, label)) > 0) {
-					newDataframe.addRow(getRow(i));
-				}
-			}
-			else {
-				if(val.compareTo((T) get(i, label)) >= 0) {
-					newDataframe.addRow(getRow(i));
-				}
-			}
-		}
-		return newDataframe;
-	}
-	
-	/**
-	 * Returns the row of the specified index.
-	 * 
-	 * @param index the index of the row
-	 * @return an array of the data of the specified row
-	 * @since 0.4.0
-	 */
-	public Object[] getRow(int index) {
-		Object[] row = new Object[this.columns.size()];
-		for(int i=0; i<this.columns.size(); i++) {
-			row[i] = get(index, i);
-		}
-		return row;
+	public DataframeSelection select() {
+		return selection;
 	}
 
 	@Override
@@ -494,14 +337,26 @@ public class Dataframe {
 	/*---------------------------------*/
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
-
+	
 	/*
-	 * Private default constructor for a Dataframe.
+	 * Initialize this dataframe and creates the columns.
 	 */
-	private Dataframe() {
+	private void initialize(String[] labels, Class<?>[] types) {
 		columns = new ArrayList<>();
 		rowCount = 0;
 		viewer = new TabularDataframeViewer();
+		selection = new DataframeSelection(this);
+		
+		// Add columns
+		for (int i=0; i<types.length; i++) {
+			// If no label is provided, the label is an empty string
+			String label = "";
+			if (i < labels.length) {
+				label = labels[i];
+			}
+
+			addColumn(types[i], label);
+		}
 	}
 
 	/*
@@ -509,6 +364,20 @@ public class Dataframe {
 	 */
 	private void addColumn(Class<?> type, String label) {
 		columns.add(new Column(type, label));
+	}
+	
+	/*
+	 * Returns the class of the first non-null object in the specified array.
+	 * Throws an IllegalArgumentException if all objects are null.
+	 */
+	private Class<?> findDataType(Object[] array) throws IllegalArgumentException {
+		for (Object object : array) {
+			if (object != null) {
+				return object.getClass();
+			}
+		}
+		
+		throw new IllegalArgumentException("a column cannot contain only null references");
 	}
 
 	/*
@@ -533,53 +402,5 @@ public class Dataframe {
 		}
 		return index;
 	}
-
-	/*
-	 * Extracts the columns of a dataframe based of an array of labels.
-	 */
-	private Dataframe extractColumns(String[] label) throws IllegalArgumentException {
-		int index;
-		Dataframe newDataframe = new Dataframe();
-		for(String s : label) {
-			index = this.labelToIndexStrict(s);
-			newDataframe.addColumn(this.columns.get(index).getType(), this.columns.get(index).getLabel());
-		}
-		return newDataframe;
-	}
 	
-	/*
-	 * Extracts all the columns of a dataframe
-	 */
-	private Dataframe extractColumns() {
-		Dataframe newDataframe = new Dataframe();
-		for (int i=0; i<this.columns.size(); i++) {
-			newDataframe.addColumn(this.columns.get(i).getType(), this.columns.get(i).getLabel());
-		}
-		return newDataframe;
-	}
-	
-	/*
-	 * Extracts the rows of a dataframe based of an array of labels
-	 */
-	private Dataframe extractRows(int[] index, Dataframe data) throws IllegalArgumentException {
-		Object[] row = new Object[data.columns.size()];
-		for(int i : index) {
-			for(int j=0; j<data.columns.size(); j++) {
-				row[j] = get(i, labelToIndex(data.getLabel(j)));
-			}
-			data.addRow(row);
-		}
-		return data;
-	}
-
-	/*
-	 * Returns an array of int ranging from begin to end
-	 */
-	private int[] range(int begin, int end) {
-		int[] array = new int[end];
-		for(int i=begin; i<end; i++) {
-			array[i] = i;
-		}
-		return array;
-	}
 }

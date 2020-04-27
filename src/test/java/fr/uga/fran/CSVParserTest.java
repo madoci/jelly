@@ -46,7 +46,7 @@ public class CSVParserTest {
 		assertEquals(1999, (int) line[0]);
 		assertEquals("Chevy", (String) line[1]);
 		assertEquals("Venture \"Extended Edition\"", (String) line[2]);
-		assertNull(line[3]);
+		assertEquals("", line[3]);
 		assertEquals(4900., (double) line[4], 0.005);
 		
 		// Ligne 3

@@ -51,6 +51,7 @@ public class DataframeStatisticsTest {
 		assertEquals(51.03, (double) stats.sum(7), epsilon);
 	}
 
+	@Test
 	public void testMean() throws Exception {
 		assertEquals(178, (int) stats.mean("List"));
 		

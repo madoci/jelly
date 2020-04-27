@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,4 +72,6 @@ public class Column {
 	 * @return the label of this column
 	 */
 	public String getLabel() { return label; }
+	
+	public Object[] getArray() { return list.toArray(); }
 }

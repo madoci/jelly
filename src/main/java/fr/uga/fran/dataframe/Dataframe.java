@@ -4,9 +4,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.uga.fran.math.ArrayStatistics;
-import fr.uga.fran.math.NumberArrayStatistics;
-
 /**
  * A two-dimensional table with heterogeneous data types.
  * Each column is labeled with a name and contains data of a single type.
@@ -17,10 +14,10 @@ import fr.uga.fran.math.NumberArrayStatistics;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.1.0
- * @see fr.uga.fran.Column
+ * @see fr.uga.fran.dataframe.Column
  * @see fr.uga.fran.DataframeViewer
  * @see fr.uga.fran.TabularDataframeViewer
- * @see fr.uga.fran.DataframeSelection
+ * @see fr.uga.fran.dataframe.DataframeSelection
  */
 public class Dataframe {
 
@@ -28,6 +25,7 @@ public class Dataframe {
 	private int rowCount;
 	private DataframeViewer viewer;
 	private DataframeSelection selection;
+	private DataframeStatistics statistics;
 
 	/**
 	 * Constructs a dataframe from an array of labels and an array of data types.
@@ -212,6 +210,14 @@ public class Dataframe {
 
 		return row;
 	}
+	
+	public Object[] getColumn(int index) {
+		return columns.get(index).getArray();
+	}
+	
+	public Object[] getColumn(String label) throws IllegalArgumentException {
+		return columns.get(labelToIndexStrict(label)).getArray();
+	}
 
 	/**
 	 * Add a row of data to this dataframe.
@@ -330,6 +336,10 @@ public class Dataframe {
 	public DataframeSelection select() {
 		return selection;
 	}
+	
+	public DataframeStatistics stats() {
+		return statistics;
+	}
 
 	@Override
 	public String toString() {
@@ -349,6 +359,7 @@ public class Dataframe {
 		rowCount = 0;
 		viewer = new TabularDataframeViewer();
 		selection = new DataframeSelection(this);
+		statistics = new DataframeStatistics(this);
 
 		// Add columns
 		for (int i=0; i<types.length; i++) {

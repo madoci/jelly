@@ -5,11 +5,10 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import fr.uga.fran.math.IntegerOperators;
-import fr.uga.fran.math.NumberArrayStatistics;
-
 
 public class DataframeTest {
+	
+	private final double epsilon = 0.00001;
 
 	@Test
 	public void testEmptyConstructor() throws Exception {
@@ -141,28 +140,28 @@ public class DataframeTest {
 		assertEquals("Ford", (String) data.get(0, 1));
 		assertEquals("E350", (String) data.get(0, 2));
 		assertEquals("ac, abs, moon", (String) data.get(0, 3));
-		assertEquals(3000., (double) data.get(0, 4), 0.005);
+		assertEquals(3000., (double) data.get(0, 4), epsilon);
 
 		// Check row 2
 		assertEquals(1999, (int) data.get(1, 0));
 		assertEquals("Chevy", (String) data.get(1, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) data.get(1, 2));
 		assertEquals("", data.get(1, 3));
-		assertEquals(4900., (double) data.get(1, 4), 0.005);
+		assertEquals(4900., (double) data.get(1, 4), epsilon);
 
 		// Check row 3
 		assertEquals(1999, (int) data.get(2, 0));
 		assertEquals("Chevy", (String) data.get(2, 1));
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) data.get(2, 2));
 		assertNull(data.get(2, 3));
-		assertEquals(5000., (double) data.get(2, 4), 0.005);
+		assertEquals(5000., (double) data.get(2, 4), epsilon);
 
 		// Check row 4
 		assertEquals(1996, (int) data.get(3, 0));
 		assertEquals("Jeep", (String) data.get(3, 1));
 		assertEquals("Grand Cherokee", (String) data.get(3, 2));
 		assertEquals("MUST SELL! air, moon roof, loaded", (String) data.get(3, 3));
-		assertEquals(4799., (double) data.get(3, 4), 0.005);
+		assertEquals(4799., (double) data.get(3, 4), epsilon);
 	}
 
 	@Test(expected = InvalidCSVFormatException.class)
@@ -262,7 +261,7 @@ public class DataframeTest {
 		assertEquals("Chevy", constructeur);
 		assertEquals("Venture \"Extended Edition\"", modele);
 		assertEquals("", description);
-		assertEquals(4900.00, (double) prix, 0.0001);
+		assertEquals(4900.00, (double) prix, epsilon);
 	}
 
 	@Test
@@ -305,7 +304,15 @@ public class DataframeTest {
 
 		assertEquals("Chevy", newData.get(1, "Constructeur"));
 		assertNull(newData.get(1, "Description"));
-		assertEquals(5000.0, (double) newData.get(1, "Prix"), 0.00001);
+		assertEquals(5000.0, (double) newData.get(1, "Prix"), epsilon);
+	}
+	
+	@Test
+	public void testStats() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/medium.csv");
+		
+		assertEquals(51.03, (double) data.stats().sum(7), epsilon);
+		assertEquals(24, (int) data.stats().median("Age"));
 	}
 
 }

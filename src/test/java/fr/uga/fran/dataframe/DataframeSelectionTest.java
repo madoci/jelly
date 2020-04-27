@@ -1,10 +1,12 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import fr.uga.fran.dataframe.DataframeSelection;
 
 public class DataframeSelectionTest {
 	private DataframeSelection selection;

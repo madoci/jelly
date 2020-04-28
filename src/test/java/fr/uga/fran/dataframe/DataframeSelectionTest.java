@@ -9,11 +9,12 @@ import org.junit.Test;
 import fr.uga.fran.dataframe.DataframeSelection;
 
 public class DataframeSelectionTest {
+	private Dataframe data;
 	private DataframeSelection selection;
 	
 	@Before
 	public void setUp() throws Exception {
-		Dataframe data = new Dataframe("src/test/resources/small.csv");
+		data = new Dataframe("src/test/resources/small.csv");
 		selection = new DataframeSelection(data);
 	}
 
@@ -163,6 +164,22 @@ public class DataframeSelectionTest {
 		Dataframe newData = selection.greaterEqual("Constructeur", "Jeep");
 		
 		assertEquals("Jeep", (String) newData.get(0, 1));
+	}
+	
+	@Test
+	public void testViewer() throws Exception {
+		TabularDataframeViewer viewer = new TabularDataframeViewer();
+		viewer.setSeparator("|");
+		data.setViewer(viewer);
+		
+		int rows[] = { 0 };
+		int columns[] = { 0, 1 };
+		Dataframe newData = selection.cross(rows, columns);
+		
+		String expected = 	"|Année|Constructeur|" + System.lineSeparator() +
+							"| 1997|Ford        |" + System.lineSeparator();
+		
+		assertEquals(expected, newData.toString());
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

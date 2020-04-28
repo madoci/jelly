@@ -123,13 +123,13 @@ public class ArrayStatistics {
 		// Retrieve the data type of the array and the operator associated
 		Operator operator = getOperator(findDataType(array));
 		
-		int count = 0;
+		Object count = operator.zero();
 		Object sum = operator.zero();
 		
 		for (Object object : array) {
 			if (object != null) {
 				sum = operator.add(sum, object);
-				count++;
+				count = operator.add(count, operator.one());
 			}
 		}
 		

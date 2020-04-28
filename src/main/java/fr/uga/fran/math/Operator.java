@@ -20,6 +20,13 @@ public interface Operator extends Comparator<Object> {
 	public Object zero();
 	
 	/**
+	 * Returns the "one" object of this operator.
+	 * 
+	 * @return the "one" object of this operator
+	 */
+	public Object one();
+	
+	/**
 	 * Returns the result of the second specified object added to the first.
 	 * 
 	 * @param a the base object to add to

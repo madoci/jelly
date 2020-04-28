@@ -7,7 +7,7 @@ import org.junit.Test;
 public class IntegerSetTest {
 
 	@Test
-	public void testNotInfinite() {
+	public void testFinite() {
 		Integer i[] = { 1, 2, 6, 0, -3, 7 };
 		Integer j[] = { 4, 1, 7, 3 };
 		IntegerSet a = new IntegerSet(i);

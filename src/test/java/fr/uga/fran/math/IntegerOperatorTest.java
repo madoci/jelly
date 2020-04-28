@@ -79,14 +79,5 @@ public class IntegerOperatorTest {
 		assertTrue(op.compare(1, -1) > 0);
 		assertTrue(op.compare(2, 0) > 0);
 	}
-	
-	/*
-	 * A simple test to ensure no NullPointerException is raised when calling setOperator
-	 * before any other methods of ArrayStatistics.
-	 */
-	@Test
-	public void testSetOperator() {
-		ArrayStatistics.setOperator(Integer.class, new IntegerOperator());
-	}
 
 }

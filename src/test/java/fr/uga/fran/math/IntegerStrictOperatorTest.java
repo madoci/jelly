@@ -12,7 +12,7 @@ public class IntegerStrictOperatorTest {
 	
 	@Before
 	public void setUp() {
-		op = new IntegerStrictOperator();
+		op = new IntegerStrictOperator(); 
 	}
 
 	@Test

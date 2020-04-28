@@ -17,6 +17,11 @@ public class IntegerStrictOperator implements Operator {
 	}
 
 	@Override
+	public Object one() {
+		return 1;
+	}
+
+	@Override
 	public Object add(Object a, Object b) {
 		return (Number) (value(a) + value(b));
 	}

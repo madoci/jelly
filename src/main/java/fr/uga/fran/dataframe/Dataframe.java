@@ -276,6 +276,16 @@ public class Dataframe {
 	}
 
 	/**
+	 * Returns the viewer used by this dataframe.
+	 *
+	 * return the viewer used by this dataframe
+	 * @since 1.0.3
+	 */
+	public DataframeViewer getViewer() {
+		return viewer;
+	}
+
+	/**
 	 * Set the viewer to be used by this dataframe.
 	 *
 	 * @param viewer viewer to be used by this dataframe

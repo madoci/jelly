@@ -166,6 +166,10 @@ public class ArrayStatistics {
 	 * @param operator the operator to use
 	 */
 	public static void setOperator(Class<?> type, Operator operator) {
+		if (operatorsMap == null) {
+			initialize();
+		}
+		
 		operatorsMap.put(type, operator);
 	}
 

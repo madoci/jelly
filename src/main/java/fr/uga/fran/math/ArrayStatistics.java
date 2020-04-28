@@ -166,6 +166,8 @@ public class ArrayStatistics {
 	 * @param operator the operator to use
 	 */
 	public static void setOperator(Class<?> type, Operator operator) {
+		checkExistence();
+		
 		operatorsMap.put(type, operator);
 	}
 
@@ -181,6 +183,15 @@ public class ArrayStatistics {
 		operatorsMap = new HashMap<>();
 		setOperator(Integer.class, new IntegerStrictOperator());
 		setOperator(Number.class, new DoubleOperator());
+	}
+	
+	/*
+	 * Initialize the operators map if it has not been initialized yet.
+	 */
+	private static void checkExistence() {
+		if (operatorsMap == null) {
+			initialize();
+		}
 	}
 	
 	/*
@@ -202,9 +213,7 @@ public class ArrayStatistics {
 	 * If none is associated to the specified type, returns the NumberOperator associated to Double.
 	 */
 	private static Operator getOperator(Class<?> type) throws IllegalArgumentException {
-		if (operatorsMap == null) {
-			initialize();
-		}
+		checkExistence();
 		
 		if (operatorsMap.containsKey(type)) {
 			return operatorsMap.get(type);

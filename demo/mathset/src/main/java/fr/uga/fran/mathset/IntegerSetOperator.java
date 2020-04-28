@@ -6,7 +6,12 @@ public class IntegerSetOperator implements Operator {
 
 	@Override
 	public Object zero() {
-		return new IntegerSet();
+		return IntegerSet.empty();
+	}
+
+	@Override
+	public Object one() {
+		return IntegerSet.full();
 	}
 
 	@Override
@@ -16,7 +21,7 @@ public class IntegerSetOperator implements Operator {
 
 	@Override
 	public Object subtract(Object a, Object b) {
-		return value(a).minus(value(b));
+		return value(a).intersection(value(b).complement());
 	}
 
 	@Override
@@ -26,18 +31,17 @@ public class IntegerSetOperator implements Operator {
 
 	@Override
 	public Object divide(Object a, Object b) {
-		return value(a).union(value(b)).minus(value(a).intersection(value(b)));
+		return value(a).union(value(b).complement());
 	}
 
 	@Override
 	public Object mean(Object a, Object b) {
-		
+		return add(a, b);
 	}
 
 	@Override
 	public int compare(Object a, Object b) {
-		// TODO Auto-generated method stub
-		return 0;
+		return value(a).size() - value(b).size();
 	}
 	
 	

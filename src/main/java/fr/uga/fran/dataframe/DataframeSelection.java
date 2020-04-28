@@ -92,6 +92,9 @@ public class DataframeSelection {
 		// Create an empty dataframe
 		Dataframe newDataframe = new Dataframe(labels, types);
 		
+		// Use the same viewer as the original dataframe
+		newDataframe.setViewer(dataframe.getViewer());
+		
 		// Populate the new dataframe with the specified rows
 		Object row[] = new Object[columns.length];
 		

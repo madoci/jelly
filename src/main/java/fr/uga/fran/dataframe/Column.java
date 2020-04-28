@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 1.0.0
- * @see fr.uga.fran.Dataframe
+ * @see fr.uga.fran.dataframe.Dataframe
  */
 public class Column {
 	private final Class<?> type;
@@ -72,4 +72,6 @@ public class Column {
 	 * @return the label of this column
 	 */
 	public String getLabel() { return label; }
+	
+	public Object[] getArray() { return list.toArray(); }
 }

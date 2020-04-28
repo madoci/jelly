@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 /**
  * A dataframe viewer representing dataframes in simple tabular form.
@@ -9,7 +9,7 @@ package fr.uga.fran;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.3.0
- * @see fr.uga.fran.Dataframe
+ * @see fr.uga.fran.dataframe.Dataframe
  */
 public class TabularDataframeViewer implements DataframeViewer {
 	private String separator;

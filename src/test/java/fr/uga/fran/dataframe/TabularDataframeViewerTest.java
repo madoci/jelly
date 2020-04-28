@@ -1,9 +1,12 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import fr.uga.fran.dataframe.Dataframe;
+import fr.uga.fran.dataframe.TabularDataframeViewer;
 
 public class TabularDataframeViewerTest {
 	private Dataframe data;

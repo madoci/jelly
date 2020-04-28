@@ -1,10 +1,13 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 
 import org.junit.Test;
+
+import fr.uga.fran.dataframe.CSVParser;
+import fr.uga.fran.dataframe.InvalidCSVFormatException;
 
 public class CSVParserTest {
 

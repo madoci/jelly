@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,10 +14,10 @@ import java.util.List;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.1.0
- * @see fr.uga.fran.Column
- * @see fr.uga.fran.DataframeViewer
- * @see fr.uga.fran.TabularDataframeViewer
- * @see fr.uga.fran.DataframeSelection
+ * @see fr.uga.fran.dataframe.Column
+ * @see fr.uga.fran.dataframe.DataframeViewer
+ * @see fr.uga.fran.dataframe.TabularDataframeViewer
+ * @see fr.uga.fran.dataframe.DataframeSelection
  */
 public class Dataframe {
 
@@ -25,10 +25,11 @@ public class Dataframe {
 	private int rowCount;
 	private DataframeViewer viewer;
 	private DataframeSelection selection;
-	
+	private DataframeStatistics statistics;
+
 	/**
 	 * Constructs a dataframe from an array of labels and an array of data types.
-	 * 
+	 *
 	 * @param labels the array of labels
 	 * @param types the array of data types
 	 * @since 1.0.0
@@ -42,23 +43,23 @@ public class Dataframe {
 	 *
 	 * @param labels the array of labels, in the same order as the columns
 	 * @param data variable amount of arrays each containing the content of a column
-	 * @throws java.lang.IllegalArgumentException if a column array is composed of objects 
+	 * @throws java.lang.IllegalArgumentException if a column array is composed of objects
 	 * of different types or only null references
 	 */
 	public Dataframe(String[] labels, Object[] ...data) throws IllegalArgumentException {
 		Class<?> types[] = new Class<?>[data.length];
 		int numRows = 0;
-		
+
 		// Find types for all columns
 		for (int i=0; i<data.length; i++) {
 			types[i] = findDataType(data[i]);
-			
+
 			// Keep track of the maximum number of rows
 			if (data[i].length > numRows) {
 				numRows = data[i].length;
 			}
 		}
-		
+
 		initialize(labels, types);
 
 		// Add rows
@@ -81,7 +82,7 @@ public class Dataframe {
 	 *
 	 * @param pathname pathname of the CSV file to use
 	 * @throws java.io.FileNotFoundException if the file at pathname is not found
-	 * @throws fr.uga.fran.InvalidCSVFormatException if the file does not follow CSV format
+	 * @throws fr.uga.fran.dataframe.InvalidCSVFormatException if the file does not follow CSV format
 	 * @since 0.2.0
 	 */
 	public Dataframe(String pathname) throws FileNotFoundException, InvalidCSVFormatException {
@@ -93,7 +94,7 @@ public class Dataframe {
 		if (line == null) {
 			throw new InvalidCSVFormatException("file is empty");
 		}
-		
+
 		// Converts the array of Object into an array of String to initialize
 		String[] labels = new String[line.length];
 		for (int i=0; i<line.length; i++) {
@@ -111,21 +112,21 @@ public class Dataframe {
 				throw new InvalidCSVFormatException("invalid number of fields at line " + rows.size());
 			}
 		}
-		
+
 		// Search for the types of all columns
 		Class<?> types[] = new Class<?>[labels.length];
-		
+
 		for (int i=0; i<labels.length; i++) {
 			int j = 0;
 			while (j < rows.size() && rows.get(j)[i] == null) {
 				j++;
 			}
-			
+
 			// If all objects in the column are null
 			if (j == rows.size()) {
 				throw new InvalidCSVFormatException("no data found in column " + i);
 			}
-			
+
 			types[i] = rows.get(j)[i].getClass();
 		}
 
@@ -192,22 +193,45 @@ public class Dataframe {
 	public Class<?> getType(String label) throws IllegalArgumentException {
 		return getType(labelToIndexStrict(label));
 	}
-	
+
 	/**
 	 * Returns the row of the specified index.
-	 * 
+	 *
 	 * @param index the index of the row inside this dataframe
 	 * @return an array of the specified row data
 	 * @since 0.4.0
 	 */
 	public Object[] getRow(int index) {
 		Object[] row = new Object[this.columns.size()];
-		
+
 		for(int i=0; i<this.columns.size(); i++) {
 			row[i] = get(index, i);
 		}
-		
+
 		return row;
+	}
+	
+	/**
+	 * Returns an array of all object in the specified column.
+	 * 
+	 * @param index the index of the specified column
+	 * @return an array of all object in the specified column
+	 * @since 1.0.0
+	 */
+	public Object[] getColumn(int index) {
+		return columns.get(index).getArray();
+	}
+
+	/**
+	 * Returns an array of all object in the column labeled by the specified label.
+	 * 
+	 * @param label the label of the column
+	 * @return an array of all object in the specified column
+	 * @throws java.lang.IllegalArgumentException if label is not an existing column label in this dataframe
+	 * @since 1.0.0
+	 */
+	public Object[] getColumn(String label) throws IllegalArgumentException {
+		return columns.get(labelToIndexStrict(label)).getArray();
 	}
 
 	/**
@@ -317,15 +341,25 @@ public class Dataframe {
 	public String tail(int num) {
 		return viewer.tail(this, num);
 	}
-	
+
 	/**
-	 * Provides a DataframeSelection to perform selection on this dataframe.
-	 * 
+	 * Provides a DataframeSelection object to perform selection on this dataframe.
+	 *
 	 * @return a dataframe selection associated to this dataframe
 	 * @since 1.0.0
 	 */
 	public DataframeSelection select() {
 		return selection;
+	}
+	
+	/**
+	 * Provides a DataframeStatistics object to perform statistics on this dataframe.
+	 * 
+	 * @return a dataframe statistics associated to this dataframe
+	 * @since 1.0.0
+	 */
+	public DataframeStatistics stats() {
+		return statistics;
 	}
 
 	@Override
@@ -337,7 +371,7 @@ public class Dataframe {
 	/*---------------------------------*/
 	/*-----    Private methods    -----*/
 	/*---------------------------------*/
-	
+
 	/*
 	 * Initialize this dataframe and creates the columns.
 	 */
@@ -346,7 +380,8 @@ public class Dataframe {
 		rowCount = 0;
 		viewer = new TabularDataframeViewer();
 		selection = new DataframeSelection(this);
-		
+		statistics = new DataframeStatistics(this);
+
 		// Add columns
 		for (int i=0; i<types.length; i++) {
 			// If no label is provided, the label is an empty string
@@ -365,7 +400,7 @@ public class Dataframe {
 	private void addColumn(Class<?> type, String label) {
 		columns.add(new Column(type, label));
 	}
-	
+
 	/*
 	 * Returns the class of the first non-null object in the specified array.
 	 * Throws an IllegalArgumentException if all objects are null.
@@ -376,7 +411,7 @@ public class Dataframe {
 				return object.getClass();
 			}
 		}
-		
+
 		throw new IllegalArgumentException("a column cannot contain only null references");
 	}
 
@@ -402,5 +437,5 @@ public class Dataframe {
 		}
 		return index;
 	}
-	
+
 }

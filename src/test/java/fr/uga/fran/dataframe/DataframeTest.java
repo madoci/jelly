@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -8,17 +8,19 @@ import org.junit.Test;
 
 public class DataframeTest {
 	
+	private final double epsilon = 0.00001;
+
 	@Test
 	public void testEmptyConstructor() throws Exception {
 		String labels[] = { "Surname", "Name" };
 		Class<?> types[] = { String.class, String.class, Integer.class };
-		
+
 		Dataframe data = new Dataframe(labels, types);
-		
+
 		assertEquals("Surname", data.getLabel(0));
 		assertEquals("Name", data.getLabel(1));
 		assertEquals("", data.getLabel(2));
-		
+
 		assertEquals(String.class, data.getType(0));
 		assertEquals(String.class, data.getType("Surname"));
 		assertEquals(String.class, data.getType(1));
@@ -26,12 +28,12 @@ public class DataframeTest {
 		assertEquals(Integer.class, data.getType(2));
 		assertEquals(Integer.class, data.getType(""));
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalEmptyConstructor() throws Exception {
 		String labels[] = { "Surname", "Name" };
 		Class<?> types[] = { String.class, String.class, null };
-		
+
 		new Dataframe(labels, types);
 	}
 
@@ -89,7 +91,7 @@ public class DataframeTest {
 			}
 		}
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testNullArrayConstructor() throws Exception {
 		String labels[] = { "Surname", "Name", "Age" };
@@ -97,7 +99,7 @@ public class DataframeTest {
 		String col2[] = { "Denise", "John Dorian" };
 		Integer col3[] = { null, null };
 		Double col4[] = { 1.05, -2.7, 32.45 };
-		
+
 		new Dataframe(labels, col1, col2, col3, col4);
 	}
 
@@ -138,28 +140,28 @@ public class DataframeTest {
 		assertEquals("Ford", (String) data.get(0, 1));
 		assertEquals("E350", (String) data.get(0, 2));
 		assertEquals("ac, abs, moon", (String) data.get(0, 3));
-		assertEquals(3000., (double) data.get(0, 4), 0.005);
+		assertEquals(3000., (double) data.get(0, 4), epsilon);
 
 		// Check row 2
 		assertEquals(1999, (int) data.get(1, 0));
 		assertEquals("Chevy", (String) data.get(1, 1));
 		assertEquals("Venture \"Extended Edition\"", (String) data.get(1, 2));
 		assertEquals("", data.get(1, 3));
-		assertEquals(4900., (double) data.get(1, 4), 0.005);
+		assertEquals(4900., (double) data.get(1, 4), epsilon);
 
 		// Check row 3
 		assertEquals(1999, (int) data.get(2, 0));
 		assertEquals("Chevy", (String) data.get(2, 1));
 		assertEquals("Venture \"Extended Edition, Very Large\"", (String) data.get(2, 2));
 		assertNull(data.get(2, 3));
-		assertEquals(5000., (double) data.get(2, 4), 0.005);
+		assertEquals(5000., (double) data.get(2, 4), epsilon);
 
 		// Check row 4
 		assertEquals(1996, (int) data.get(3, 0));
 		assertEquals("Jeep", (String) data.get(3, 1));
 		assertEquals("Grand Cherokee", (String) data.get(3, 2));
 		assertEquals("MUST SELL! air, moon roof, loaded", (String) data.get(3, 3));
-		assertEquals(4799., (double) data.get(3, 4), 0.005);
+		assertEquals(4799., (double) data.get(3, 4), epsilon);
 	}
 
 	@Test(expected = InvalidCSVFormatException.class)
@@ -215,7 +217,7 @@ public class DataframeTest {
 
 		data.addRow(row);
 	}
-	
+
 	@Test
 	public void testAccessByLabel() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
@@ -242,24 +244,24 @@ public class DataframeTest {
 		assertEquals(4, data.rowCount());
 		assertEquals(5, data.columnCount());
 	}
-	
+
 	@Test
 	public void testGetRow() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
-		
+
 		Object[] row = data.getRow(1);
-		
+
 		Integer annee = (Integer) row[0];
 		String constructeur = (String) row[1];
 		String modele = (String) row[2];
 		String description = (String) row[3];
 		Double prix = (Double) row[4];
-		
+
 		assertEquals(1999, (int) annee);
 		assertEquals("Chevy", constructeur);
 		assertEquals("Venture \"Extended Edition\"", modele);
 		assertEquals("", description);
-		assertEquals(4900.00, (double) prix, 0.0001);
+		assertEquals(4900.00, (double) prix, epsilon);
 	}
 
 	@Test
@@ -289,20 +291,28 @@ public class DataframeTest {
 		assertEquals(viewer.tail(data, 2), data.tail(2));
 		assertEquals(viewer.view(data), data.toString());
 	}
-	
+
 	@Test
 	public void testSelect() throws Exception {
 		Dataframe data = new Dataframe("src/test/resources/small.csv");
-		
+
 		Dataframe newData = data.select().lessEqual("Constructeur", "Chevy");
-		
+
 		assertEquals(1999, (int) newData.get(0, "Année"));
 		assertEquals("Venture \"Extended Edition\"", newData.get(0, "Modèle"));
 		assertEquals("", newData.get(0, "Description"));
 
 		assertEquals("Chevy", newData.get(1, "Constructeur"));
 		assertNull(newData.get(1, "Description"));
-		assertEquals(5000.0, (double) newData.get(1, "Prix"), 0.00001);
+		assertEquals(5000.0, (double) newData.get(1, "Prix"), epsilon);
+	}
+	
+	@Test
+	public void testStats() throws Exception {
+		Dataframe data = new Dataframe("src/test/resources/medium.csv");
+		
+		assertEquals(51.03, (double) data.stats().sum(7), epsilon);
+		assertEquals(24, (int) data.stats().median("Age"));
 	}
 
 }

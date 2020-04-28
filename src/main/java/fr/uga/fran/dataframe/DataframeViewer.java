@@ -1,4 +1,4 @@
-package fr.uga.fran;
+package fr.uga.fran.dataframe;
 
 /**
  * An interface providing methods to get string representations of a Dataframe object.
@@ -8,8 +8,8 @@ package fr.uga.fran;
  * @author ANDRE Stephen
  * @author FREBY Laura
  * @since 0.3.0
- * @see fr.uga.fran.Dataframe
- * @see fr.uga.fran.TabularDataframeViewer
+ * @see fr.uga.fran.dataframe.Dataframe
+ * @see fr.uga.fran.dataframe.TabularDataframeViewer
  */
 public interface DataframeViewer {
 	/**

@@ -7,6 +7,7 @@ import java.util.Scanner;
 import fr.uga.fran.dataframe.Dataframe;
 import fr.uga.fran.dataframe.TabularDataframeViewer;
 import fr.uga.fran.math.ArrayStatistics;
+import fr.uga.fran.math.IntegerOperator;
 
 /**
  * 
@@ -14,8 +15,12 @@ import fr.uga.fran.math.ArrayStatistics;
  */
 public class App 
 {
-	private interface DataframeSelect {
+	private interface CommandSelect {
 		public <E> Dataframe select(String label, Comparable<E> value);
+	}
+	
+	private interface CommandStats {
+		public <E> Object stats(String label);
 	}
 	
 	private static final Integer[][] arrays = 
@@ -72,24 +77,26 @@ public class App
     		if (option.equals("s") || option.equals("select")) {
     			selectInterface();
     		} else if (option.equals("t") || option.equals("stats")) {
-    			//statsInterface();
+    			statsInterface();
     		} else if (option.equals("d") || option.equals("display")) {
     			displayDataframe();
     		} else if (option.equals("r") || option.equals("restore")) {
     			dataframe = original;
     			System.out.println("Dataframe restored.");
+    			displayDataframe();
     		} else if (option.equals("c") || option.equals("scenario")) {
     			scenarioMode();
     		} else if (option.equals("q") || option.equals("quit")) {
     			System.out.println("Exiting application...");
     			System.exit(0);
     		} else {
-    			
+    			System.out.println("Unknown option \""+option+"\".");
     		}
     	}
     }
     
     private static void showGlobalOptions() {
+    	System.out.println();
     	System.out.println("Available global options:");
     	System.out.println("s | select   : show the selection interface to perform selection");
     	System.out.println("t | stats    : show the stats interface to perform satistics");
@@ -111,7 +118,7 @@ public class App
     			crossInterface();
     			displayDataframe();
     		} else if (option.equals("eq")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().equal(label, value);
@@ -119,7 +126,7 @@ public class App
     			});
     			displayDataframe();
     		} else if (option.equals("ne")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().notEqual(label, value);
@@ -127,7 +134,7 @@ public class App
 				});
     			displayDataframe();
     		} else if (option.equals("lt")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().lessThan(label, value);
@@ -135,7 +142,7 @@ public class App
     			});
     			displayDataframe();
     		} else if (option.equals("le")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().lessEqual(label, value);
@@ -143,7 +150,7 @@ public class App
     			});
     			displayDataframe();
     		} else if (option.equals("gt")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().greaterThan(label, value);
@@ -151,7 +158,7 @@ public class App
     			});
     			displayDataframe();
     		} else if (option.equals("ge")) {
-    			comparisonInterface(new DataframeSelect() {
+    			comparisonInterface(new CommandSelect() {
 					@Override
 					public <E> Dataframe select(String label, Comparable<E> value) {
 						return dataframe.select().greaterEqual(label, value);
@@ -166,12 +173,13 @@ public class App
     			System.out.println("Exiting application...");
     			System.exit(0);
     		} else {
-    			
+    			System.out.println("Unknown option \""+option+"\".");
     		}
     	}
     }
     
     private static void showSelectOptions() {
+    	System.out.println();
     	System.out.println("Available selection options:");
     	System.out.println("x | cross    : select row and column indexes");
     	System.out.println("eq           : select a value to be equal to");
@@ -205,7 +213,7 @@ public class App
     	}
     }
     
-    private static void comparisonInterface(DataframeSelect select) {
+    private static void comparisonInterface(CommandSelect select) {
     	System.out.print("Label of the target column: ");
     	String label = input.nextLine();
     	
@@ -240,6 +248,95 @@ public class App
     	}
     }
     
+    private static void statsInterface() {
+    	while (true) {
+    		showStatsOptions();
+    		
+    		String option = input.nextLine();
+    		
+    		if (option.equals("amin")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().argmin(label);
+					}
+    			});
+    		} else if (option.equals("amax")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().argmax(label);
+					}
+    			});
+    		} else if (option.equals("min")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().min(label);
+					}
+    			});
+    		} else if (option.equals("max")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().max(label);
+					}
+    			});
+    		} else if (option.equals("sum")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().sum(label);
+					}
+    			});
+    		} else if (option.equals("mean")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().mean(label);
+					}
+    			});
+    		} else if (option.equals("median")) {
+    			calculInterface(new CommandStats() {
+					@Override
+					public <E> Object stats(String label) {
+						return dataframe.stats().median(label);
+					}
+    			});
+    		} else {
+    			System.out.println("Unknown option \""+option+"\".");
+    		}
+    	}
+    }
+    
+    private static void showStatsOptions() {
+    	System.out.println();
+    	System.out.println("Available statistics options:");
+    	System.out.println("amin         : calculate the argmin of a dataframe column");
+    	System.out.println("amax         : calculate the argmax of a dataframe column");
+    	System.out.println("min          : calculate the min of a dataframe column");
+    	System.out.println("max          : calculate the max of a dataframe column");
+    	System.out.println("sum          : calculate the sum of a dataframe column");
+    	System.out.println("mean         : calculate the mean of a dataframe column");
+    	System.out.println("median       : calculate the median of a dataframe column");
+    	System.out.println("d | display  : display the dataframe");
+    	System.out.println("r | return   : return to the global interface");
+    	System.out.println("q | quit     : quit the application");
+    	System.out.println();
+    	System.out.print("What do you want to do? ");
+    }
+    
+    public static void calculInterface(CommandStats stats) {
+    	System.out.print("Label of the target column: ");
+    	String label = input.nextLine();
+    	
+    	try {
+    		System.out.println(stats.stats(label));
+    	} catch (Exception e) {
+    		System.out.println("Label \""+label+"\" cannot be found in the dataframe");
+    	}
+    }
+    
     private static int[] askIntArray() {
     	String line = input.nextLine();
     	
@@ -262,7 +359,6 @@ public class App
     private static void displayDataframe() {
     	System.out.println("Dataframe :");
         System.out.println(dataframe);
-        System.out.println();
     }
     
     private static void init() {
@@ -272,7 +368,8 @@ public class App
         TabularDataframeViewer viewer = new TabularDataframeViewer();
         viewer.setSeparator(" | ");
         dataframe.setViewer(viewer);
-        
+
+        ArrayStatistics.setOperator(Integer.class, new IntegerOperator());
         ArrayStatistics.setOperator(IntegerSet.class, new IntegerSetOperator());
     }
     

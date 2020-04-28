@@ -22,6 +22,12 @@ public class IntegerOperatorTest {
 	}
 
 	@Test
+	public void testOne() {
+		int o = (int) op.one();
+		assertEquals(1, o);
+	}
+
+	@Test
 	public void testAdd() {
 		int i = (int) op.add(12, 4);
 		assertEquals(16, i);

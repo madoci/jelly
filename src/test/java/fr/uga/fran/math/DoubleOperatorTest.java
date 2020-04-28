@@ -22,6 +22,12 @@ public class DoubleOperatorTest {
 	}
 
 	@Test
+	public void testOne() {
+		double o = (double) op.one();
+		assertEquals(1.0, o, epsilon);
+	}
+
+	@Test
 	public void testAdd() {
 		double d = (double) op.add(12., 3.56);
 		assertEquals(15.56, d, epsilon);

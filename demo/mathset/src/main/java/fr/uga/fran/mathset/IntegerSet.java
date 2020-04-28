@@ -212,6 +212,24 @@ public class IntegerSet implements Iterable<Integer> {
 	
 	@Override
 	public String toString() {
-		return null;
+		String s = "{";
+		
+		if (infinite) {
+			s = "Z\\" + s;
+		}
+		
+		boolean first = true;
+		for (Integer i : this) {
+			if (!first) {
+				s += ",";
+			} else {
+				first = false;
+			}
+			s += i;
+		}
+		
+		s += "}";
+		
+		return s;
 	}
 }

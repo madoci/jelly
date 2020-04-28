@@ -69,8 +69,8 @@ public class IntegerSet implements Iterable<Integer> {
 		return set.size();
 	}
 	
-	public boolean isInfinite() {
-		return infinite;
+	public boolean isFinite() {
+		return !infinite;
 	}
 	
 	public void add(Integer i) {

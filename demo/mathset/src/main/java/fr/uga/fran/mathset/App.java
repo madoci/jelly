@@ -211,13 +211,24 @@ public class App
     	
     	try {
     		Class<?> type = dataframe.getType(label);
-    		
+
+    		System.out.print("Value to be compared to: ");
     		if (type.isAssignableFrom(Integer.class)) {
-    			int value = input.nextInt();
-    			dataframe = select.select(label, value);
+    			String line = input.nextLine();
+    			try {
+	    			int value = Integer.valueOf(line);
+	    			dataframe = select.select(label, value);
+    			} catch (Exception e) {
+    				System.out.println(line+" is not a valid integer");
+    			}
     		} else if (type.isAssignableFrom(Double.class)) {
-    			double value = input.nextDouble();
-    			dataframe = select.select(label, value);
+    			String line = input.nextLine();
+    			try {
+	    			double value = Double.valueOf(line);
+	    			dataframe = select.select(label, value);
+    			} catch (Exception e) {
+    				System.out.println(line+" is not a valid double");
+    			}
     		} else if (type.isAssignableFrom(String.class)) {
     			String value = input.nextLine();
     			dataframe = select.select(label, value);

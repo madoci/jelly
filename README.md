@@ -49,7 +49,7 @@ Pour construire un dataframe à partir de tableaux d'objets, il faut donner au c
 ```java
 public Dataframe(String[] labels, Object[] ...data)
 ```
-Cette méthode détermine le type de chaque colonne automatiquement en fonction des objets donnés. Si un des tableaux contient des objets de type différents ou uniquement des références nulles, une IllegalArgumentException sera levée.  
+Cette méthode détermine le type de chaque colonne automatiquement en fonction des objets donnés. Si un des tableaux contient des objets de types différents ou uniquement des références nulles, une IllegalArgumentException sera levée.  
 
 *Exemple :*
 ```java
@@ -65,7 +65,7 @@ Pour construire un dataframe à partir d'un fichier CSV, il faut simplement donn
 ```java
 public Dataframe(String pathname)
 ```
-La première ligne du fichier CSV correspond aux labels des colonnes, et chaque ligne suivante correspond à une ligne du dataframe. Les types des colonnes sont interprétés automatiquement. Seuls les chaînes de caractères (*String*), les entiers (*int*) et les réels (*double*) sont reconnus.  
+La première ligne du fichier CSV correspond aux labels des colonnes, et chaque ligne suivante correspond à une ligne du dataframe. Les types des colonnes sont interprétés automatiquement. Seules les chaînes de caractères (*String*), les entiers (*int*) et les réels (*double*) sont reconnus.  
 
 Le fichier CSV devra respecter les conventions du format CSV (cf. https://en.wikipedia.org/wiki/Comma-separated_values#Basic_rules). Si le format n'est pas respecté, une InvalidCSVFormatException sera levée.
 > Il est actuellement impossible de mettre un retour à la ligne dans un champ, même s'il est entouré de guillemets comme spécifié dans les règles du format CSV.
@@ -82,7 +82,7 @@ Il est posssible d'afficher rapidement un dataframe pour visualiser ses données
 
 ###### Visualiser les données
 Pour visualiser les données d'un dataframe, plusieurs méthodes sont disponibles :
-- **view()** : affiche la totailté du dataframe
+- **view()** : affiche la totalité du dataframe
 - **head() / head(num)** : affiche les premières lignes du dataframe (num permet de définir le nombre de lignes affichées)
 - **tail() / tail(num)** : affiche les premières lignes du dataframe
 
@@ -152,10 +152,10 @@ Dataframe b = dataframe.select().lessThan("Nom", "F");
 
 #### Statistiques sur un dataframe
 Des calculs de statistiques de base peuvent être exécutés sur les colonnes d'un dataframe.
-Les méthodes de calcul sont fournises par un objet DataframeStatistics associé à un dataframe, accessible via sa méthode *stats()*.
+Les méthodes de calcul sont fournies par un objet DataframeStatistics associé à un dataframe, accessible via sa méthode *stats()*.
 
 ###### Effectuer des calculs statistiques
-Les méthodes fournises permettent de calculer :
+Les méthodes fournies permettent de calculer :
 - **argmin / argmax** : indice de la ligne contenant la valeur minimale / maximale de la colonne spécifiée
 - **min / max** : valeur minimale / maximale de la colonne spécifiée
 - **sum** : somme sur toutes les lignes des champs de la colonne spécifiée

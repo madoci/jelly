@@ -55,13 +55,33 @@ public class App
     }
     
     private static void scenarioMode() {
+    	dataframe = original;
     	displayDataframe();
+    	
+    	System.out.println("Select rows with names below 'H':");
+    	dataframe = dataframe.select().lessThan("Name", "H");
+    	displayDataframe();
+    	
+    	System.out.println("Remove row 3 and column \"Name\":");
+    	int rows[] = { 0, 1, 2, 4, 5, 6, 7 };
+    	String labels[] = { "Set", "Count", "Cost" };
+    	dataframe = dataframe.select().cross(rows, labels);
+    	displayDataframe();
+    	
+    	System.out.println("Select rows with count greater or equal to 2:");
+    	dataframe = dataframe.select().greaterEqual("Count", 2);
+    	displayDataframe();
+    	
+    	System.out.println("Sum all the sets (adding sets is the union of them):");
+    	System.out.println(dataframe.stats().sum("Sets"));
+    	displayDataframe();
+
+    	dataframe = original;
     }
     
     private static void interactiveMode() {
     	System.out.println("Orignal dataframe :");
     	System.out.println(dataframe);
-    	System.out.println();
     	
     	input = new Scanner(System.in);
     	
@@ -85,6 +105,7 @@ public class App
     			System.out.println("Dataframe restored.");
     			displayDataframe();
     		} else if (option.equals("c") || option.equals("scenario")) {
+    			System.out.println("Running scenario...");
     			scenarioMode();
     		} else if (option.equals("q") || option.equals("quit")) {
     			System.out.println("Exiting application...");

@@ -28,12 +28,14 @@ jobs:
 
     - name: docker
       if: branch = demo
+      services:
+        - docker
       env:
         secure: "CSfFNTxgBBoDz1sq4IAAkumb4B8I6+TkJilCqD+w68mF+KL6LjdWEltN2CPJzlE1Ax70Tfpz06cEc+b/0P/K7W8NBReGaMKCc5nU1tuJb/Cb6Qn2yIn2/BXpBsAhsGblW9swgV3GWGAun19nKxMDGXNc9kM7iq79b6DNV9z9NR8SR8FL7OL1YSpRhip0eoC83ruqPj/W2hOVxI7VHDuclsrpKaYQGfaRELDuJXqJVHXGy4oFW1EBuoFunPmQM+YrtWI93Eht/TYSFqni3XYOFZB5xIRoNKYbPt49K6K1vOoiyQSiG9py5WK3HzcPr6qizWexLmU6Az9Elv5ZhxEl1gdEZIxnDhqTfwD6c907r+MlsiiEcSrUQRfkV4Akh6jVkXG4OR5NVTEAmoSoK+dj+PdmdlgKG+WGcdTlLSQAehn/0JfGH55mqLAdnXC+BbO+xzKKxWNuptRh0aV0KqZhPvL4+y8SaKDSAXj++gwaN+yfDdKDmD3S8D2nrtvuNdcmdE3SLznsi9+fcwCMsLnxjT4USxnK1mr+VnHdxwKHI/Dk90cEFnAPbje26cqp9tXPLwqYokh7P5Mjr0VgERVL3RMVXjzRJHi23VRHF4UzYSN36tFC8rbKT4t/tAhU4mMPUQKPjJ46Lh/DajWtpRWmN1BWaWHmLhG/ZCGxiyO1c9w="
       script:
         - cp ./.travis/settings.xml $HOME/.m2
         - cd demo/mathset
-        - mvn package -B
+        - docker build -t mathset .
 
 cache:
   directories:

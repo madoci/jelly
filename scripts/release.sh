@@ -126,9 +126,9 @@ fi
 # Perform the release
 # ------------------------------
 
-echo "-----------------------------------------------"
-echo "Preparing release $version (tagged $tag)"
-echo "-----------------------------------------------"
+echo "--------------------------------------------------"
+echo "- Preparing release $version (tagged $tag)"
+echo "--------------------------------------------------"
 
 # Make sure we are on master and everything is up-to-date
 git checkout master
@@ -146,9 +146,9 @@ git push
 git tag $tag
 git push --tags
 
-echo "-----------------------------------------------"
-echo "Preparing next development version $snapshot"
-echo "-----------------------------------------------"
+echo "--------------------------------------------------"
+echo "- Preparing next development version $snapshot"
+echo "--------------------------------------------------"
 
 # Set the next development version in POM file
 mvn versions:set -DnewVersion=$snapshot
@@ -157,3 +157,7 @@ mvn versions:set -DnewVersion=$snapshot
 git add .
 git commit -m "Prepare for next development version $snapshot"
 git push
+
+# ------------------------------
+# Perform the release
+# ------------------------------

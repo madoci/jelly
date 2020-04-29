@@ -214,7 +214,7 @@ Le projet a été développé en utilisant le workflow de GitHub (cf. [GitHub fl
 
 #### Junit
 Les tests unitaires ont été mis en place avec Junit 4. Cela permet de vérifier à chaque nouvelle phase de développement que toutes les méthodes fonctionnent encore.  
-Une classe de test est ajoutée (dans le dossier *src/test/java*) pour chaque nouvelle classe du projet. Les méthodes de test sont donc écrites au fur et à mesure du développemet.
+Une classe de test est ajoutée (dans le dossier *src/test/java*) pour chaque nouvelle classe du projet. Les méthodes de test sont donc écrites au fur et à mesure du développement.
 
 #### Javadoc
 Le code a été documenté à l'aide de nombreux commentaires. Notamment, toutes les classes, interfaces et méthodes publiques possèdent des commentaires au format javadoc. La documentation est disponible en archive JAR pour chaque release du projet (à partir de la version 0.3.0).
@@ -226,7 +226,7 @@ Pour gérer et automatiser la production de notre projet, nous avons utilisé Ma
 La phase *test* de Maven a été configurée pour lancer tous les tests unitaires créés avec Junit et générer un rapport de couverture JaCoCo à partir de ces tests.
 
 #### Release et déploiement <a name="release-et-deploiement"></a>
-La version courante du projet est indiquée dans le fichier *pom.xml* de Maven. Lorsqu'il s'agit d'une version en développement, le numéro de version est suffixé par "-SNAPSHOT". Cela indique à Maven que le code de cette version peut changer d'une date à l'autre. Lors d'une release, le suffixe est retiré et la version est définitive (le code source est immuable). Pour créer une nouvelle release, il faut donc modifier la version du *pom.xml* pour la version de release, commit la modification, créer un tag, remodifier la version du *pom.xml* pour la nouvelle version de développment et commit le changement.  
+La version courante du projet est indiquée dans le fichier *pom.xml* de Maven. Lorsqu'il s'agit d'une version en développement, le numéro de version est suffixé par "-SNAPSHOT". Cela indique à Maven que le code de cette version peut changer d'une date à l'autre. Lors d'une release, le suffixe est retiré et la version est définitive (le code source est immuable). Pour créer une nouvelle release, il faut donc modifier la version du *pom.xml* pour la version de release, commit la modification, créer un tag, remodifier la version du *pom.xml* pour la nouvelle version de développement et commit le changement.  
 Pour automatiser ce processus, nous avons écrit le script [release.sh](./scripts/release.sh).  
 
 La phase *deploy* de Maven a été configurée pour déployer le logiciel sur GitHub Package. La dernière version de la bibliothèque ainsi que les versions précédentes sont donc disponibles sur le dépôt GitHub à la page https://github.com/madoci/jelly/packages.
@@ -238,7 +238,7 @@ Le plugin Javadoc de Maven a été utilisé pour générer automatiquement une a
 Travis CI est un service en ligne d'intégration continue pour les projets hébergés sur GitHub. Il permet de définir des tâches à effectuer lorsqu'un commit est envoyé sur le dépôt github.  
 
 #### Phase de test
-A chaque fois qu'un commit est envoyé sur GitHub (et que ce n'est pas un tag), la commande `mvn test -B` est exécuté dans un environnement de Travis CI. Cela permet de vérifier que tous les tests unitaires sont validés dès qu'une nouvelle modification est apportée, et donc de corriger des erreurs le plus rapidement possible, et surtout avant la mise en production. Si un des tests échoue, le statut du build est indiqué comme *failed*.  
+A chaque fois qu'un commit est envoyé sur GitHub (et que ce n'est pas un tag), la commande `mvn test -B` est exécutée dans un environnement de Travis CI. Cela permet de vérifier que tous les tests unitaires sont validés dès qu'une nouvelle modification est apportée, et donc de corriger des erreurs le plus rapidement possible, et surtout avant la mise en production. Si un des tests échoue, le statut du build est indiqué comme *failed*.  
 GitHub a d'ailleurs été configuré pour imposer les pull requests à réussir le build de Travis CI avant de pouvoir être fusionné sur *master*.
 
 #### Phase de déploiement
@@ -246,7 +246,7 @@ Lorsqu'un tag est créé ou envoyé sur GitHub, c'est la commande `mvn deploy -B
 Travis CI va ensuite ajouter les deux archives sur GitHub Release (https://github.com/madoci/jelly/releases).
 
 ### CodeCov
-CodeCov est un service en ligne permettant d'analyser les rapports de couverture de code (générés par des outils comme JaCoCo) du projet. Les rapports sont envoyés automatiquement avec Travis CI lorsque la phase de build réussie (phase *after_success*).  
+CodeCov est un service en ligne permettant d'analyser les rapports de couverture de code (générés par des outils comme JaCoCo) du projet. Les rapports sont envoyés automatiquement avec Travis CI lorsque la phase de build réussi (phase *after_success*).  
 Cet outil nous a permis de maintenir un haut taux de couverture à travers tout le projet.
 
 ### Code Climate
@@ -271,7 +271,7 @@ docker run -i --name <container-name> <image-name>
 > L'option -i permet de lancer le conteneur en interactif. Ceci est nécessaire car l'application requiert des entrées utilisateurs.
 
 ### Déploiement sur Docker Hub <a name="deploiement-sur-docker-hub"></a>
-L'image Docker de la démo est déployer automatiquement sur Docker Hub à l'aide de travis CI lors de la phase de déploiement. Après le déploiement des archives sur GitHub Release, Travis CI :
+L'image Docker de la démo est déployé automatiquement sur Docker Hub à l'aide de travis CI lors de la phase de déploiement. Après le déploiement des archives sur GitHub Release, Travis CI :
 1. se déplace à la racine de la démo *mathset*
 2. crée son archive JAR avec `mvn package -B`
 3. crée l'image Docker

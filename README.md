@@ -198,7 +198,7 @@ Le calcul des statistiques d'un dataframe passe par l'utilisation des méthodes 
 ArrayStatistics.setOperator(Integer.class, new IntegerOperator());
 ```
 
-La démo **mathset** fournit un exemple d'opérateur personnalisé pour les ensembles d'entiers (cf. [IntegerSetOperator](#demo/mathset/src/main/java/fr/uga/fran/mathset/IntegerSetOperator.java)).
+La démo **mathset** fournit un exemple d'opérateur personnalisé pour les ensembles d'entiers (cf. [IntegerSetOperator](./demo/mathset/src/main/java/fr/uga/fran/mathset/IntegerSetOperator.java)).
 
 
 ## Outils utilisés <a name="outils-utilises"></a>
@@ -227,7 +227,7 @@ La phase *test* de Maven a été configurée pour lancer tous les tests unitaire
 
 #### Release et déploiement <a name="release-et-deploiement"></a>
 La version courante du projet est indiquée dans le fichier *pom.xml* de Maven. Lorsqu'il s'agit d'une version en développement, le numéro de version est suffixé par "-SNAPSHOT". Cela indique à Maven que le code de cette version peut changer d'une date à l'autre. Lors d'une release, le suffixe est retiré et la version est définitive (le code source est immuable). Pour créer une nouvelle release, il faut donc modifier la version du *pom.xml* pour la version de release, commit la modification, créer un tag, remodifier la version du *pom.xml* pour la nouvelle version de développment et commit le changement.  
-Pour automatiser ce processus, nous avons écrit le script [release.sh](#./scripts/release.sh).  
+Pour automatiser ce processus, nous avons écrit le script [release.sh](./scripts/release.sh).  
 
 La phase *deploy* de Maven a été configurée pour déployer le logiciel sur GitHub Package. La dernière version de la bibliothèque ainsi que les versions précédentes sont donc disponibles sur le dépôt GitHub à la page https://github.com/madoci/jelly/packages.
 

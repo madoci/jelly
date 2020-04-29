@@ -35,6 +35,7 @@ jobs:
       script:
         - cp ./.travis/settings.xml $HOME/.m2
         - cd demo/mathset
+        - mvn package -B
         - docker build -t mathset .
 
 cache:

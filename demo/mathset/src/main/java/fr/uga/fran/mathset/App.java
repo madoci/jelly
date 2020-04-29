@@ -58,6 +58,14 @@ public class App
     	dataframe = original;
     	displayDataframe();
     	
+    	System.out.println("Display the 5 first rows of the dataframe:");
+    	System.out.println("Head:");
+    	System.out.println(dataframe.head());
+    	
+    	if (!continueScenario()) {
+    		return;
+    	}
+    	
     	System.out.println("Select rows with names below 'H':");
     	dataframe = dataframe.select().lessThan("Name", "H");
     	displayDataframe();

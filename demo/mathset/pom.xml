@@ -7,6 +7,14 @@
   <version>1.0-SNAPSHOT</version>
   <name>mathset</name>
   <url>http://maven.apache.org</url>
+
+  <repositories>
+    <repository>
+      <id>github-jelly</id>
+      <name>GitHub Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/madoci/jelly</url>
+    </repository>
+  </repositories>
   
   <dependencies>
     <dependency>

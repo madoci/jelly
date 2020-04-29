@@ -185,7 +185,16 @@ La démo **mathset** fournit un exemple d'opérateur personnalisé pour les ense
 
 ## Outils utilisés
 
+#### GitHub workflow
+Le projet a été développé en utilisant le workflow de GitHub (cf. [GitHub flow](#https://guides.github.com/introduction/flow/)). Le principe est le suivant :  
+- la branche principale est la branche *master*.
+- chaque nouvelle fonctionnalité ou correction de bug est développée sur une nouvelle branche basée sur *master* (*feature/\<name>* pour les fonctionnalités et *hotfix/\<name>* pour les corrections de bugs déjà présents sur *master*).
+- lorsqu'une fonctionnalité/correction est terminée, une pull request est ouverte et les collaborateurs peuvent la passer en revue et poster des commentaires.
+- lorsque la branche a été vérifiée et acceptée, elle est fusionnée sur master et la pull request est fermée.
 
+#### Maven
+
+#### Travis CI
 
 
 ## Image Docker

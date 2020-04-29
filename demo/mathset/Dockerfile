@@ -1,4 +1,4 @@
 FROM openjdk:8-jre-slim
-COPY ./target/*.jar /home/demo.jar
+COPY ./target/mathset-1.0-SNAPSHOT-jar-with-dependencies.jar /home/demo.jar
 WORKDIR /home
-CMD java -jar demo.jar
+CMD java -jar demo.jar -i

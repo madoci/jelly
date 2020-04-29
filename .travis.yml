@@ -37,7 +37,7 @@ jobs:
         - cd demo/mathset
         - mvn package -B
         - docker build -t demo .
-        - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+        - echo "$DOCKER_PASSWORD" | docker login -u="$DOCKER_USERNAME" --password-stdin
         - docker push madoci/jelly:demo
 
 cache:
